@@ -1,0 +1,28 @@
+MSG: parser.y: yyparse:69: program begin
+MSG: parser.y: yyparse:189: begin compound symbol remove_duplicates
+MSG: parser.y: yyparse:200: begin func def: INT remove_duplicates
+duplicates.nop: line 6: at 7: syntax error, unexpected SYMBOL
+MSG: parser.y: yyparse:189: begin compound symbol arr_size
+MSG: parser.y: yyparse:200: begin func def: INT arr_size
+MSG: parser.y: yyparse:189: begin compound symbol i
+MSG: parser.y: yyparse:200: begin func def: INT i
+Warning: duplicates.nop: 14: 39: unrecognized character: & (0x26)
+Warning: duplicates.nop: 14: 40: unrecognized character: & (0x26)
+MSG: parser.y: yyparse:189: begin compound symbol main
+MSG: parser.y: yyparse:200: begin func def: INT main
+MSG: parser.y: yyparse:215: empty function decl list
+duplicates.nop: line 6: at 34: syntax error, unexpected '*', expecting SYMBOL or DICT or LIST
+MSG: parser.y: yyparse:189: begin compound symbol nums
+MSG: parser.y: yyparse:200: begin func def: INT nums
+MSG: parser.y: yyparse:189: begin compound symbol size
+MSG: parser.y: yyparse:200: begin func def: INT size
+duplicates.nop: line 24: at 14: syntax error, unexpected SYMBOL, expecting ')' or ','
+MSG: parser.y: yyparse:189: begin compound symbol i
+MSG: parser.y: yyparse:200: begin func def: INT i
+duplicates.nop: line 27: at 15: syntax error, unexpected '=', expecting '('
+MSG: parser.y: yyparse:189: begin compound symbol count
+MSG: parser.y: yyparse:200: begin func def: INT count
+MSG: parser.y: yyparse:71: program end
+
+duplicates.nop: line 29: at 11: syntax error, unexpected ';', expecting '('
+errors: 5 warnings: 2

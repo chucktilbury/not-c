@@ -1,0 +1,17 @@
+MSG: parser.y: yyparse:69: program begin
+MSG: parser.y: yyparse:91: begin struct definition: test_func_parms
+MSG: parser.y: yyparse:144: begin func decl: PRIVATE INT name52
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:217: func parameter def: UINT arg2
+MSG: parser.y: yyparse:217: func parameter def: FLOAT arg3
+MSG: parser.y: yyparse:217: func parameter def: BOOL arg4
+MSG: parser.y: yyparse:217: func parameter def: STRING arg5
+MSG: parser.y: yyparse:220: func parameter def: INT LIST arg6
+MSG: parser.y: yyparse:223: func parameter def: INT DICT arg7
+MSG: parser.y: yyparse:146: end func declaration
+
+MSG: parser.y: yyparse:93: end of struct definition
+
+MSG: parser.y: yyparse:71: program end
+
+errors: 0 warnings: 0

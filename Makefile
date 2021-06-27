@@ -1,58 +1,22 @@
 ################################################################################
 #
-#	Make file for simple objects
+#	Makefile for nop
 #
 ################################################################################
 PLATNAME := $(shell uname)
 
-OBJS	=	ast.o \
-			errors.o \
-			nop.o \
-			memory.o \
-			symbols.o \
-			constants.o
-
-OBJS1	=	scanner.o \
-			parser.o
-
-SRCS	=	$(OBJS:.o=.c)
-SRCS1	=	$(OBJS1:.o=.c)
-HEADERS	=	$(OBJS:.o=.h)
-
-TARGET	=	nop
-DEPS	= 	$(TARGET).dep
-
-CC		=	gcc # clang
-CARGS	=	-Wall -Wextra
-HSRC	= 	-I.
-
-# comment this out to disable messages
-DEBUG	=	-g -DTRACE
-
-.PHONY: all pretty clean all_clean
-
-all: $(TARGET)
-
-.c.o:
-	$(CC) $(HSRC) $(CARGS) $(DEBUG) -c $< -o $@
-
-$(TARGET): $(OBJS1) $(OBJS)
-	$(CC) $(DEBUG) $(CARGS) -o $(TARGET) $(OBJS) $(OBJS1)
-
-parser.c parser.h: parser.y scanner.h
-	bison --report=lookahead -tvdo parser.c parser.y
-
-scanner.c: scanner.l parser.h scanner.h
-	flex -o scanner.c scanner.l
-
-pretty:
-	indent $(SRCS) $(HEADERS)
-	-rm -f *~
+all:
+	make -C src
 
 clean:
-	-rm -f parser.output $(OBJS) $(OBJS1) *.bak *~
+	make -C src clean
+	make -C tests clean
 
-all_clean: clean
-	-rm -f scanner.c parser.c parser.h $(TARGET) $(DEPS) .indent.pro
+all_clean:
+	make-C src all_clean
 
--include $(DEPS)
+pretty:
+	make -C src pretty
+
+test:
+	make -C tests

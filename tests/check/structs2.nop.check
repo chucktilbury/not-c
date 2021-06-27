@@ -1,0 +1,23 @@
+MSG: parser.y: yyparse:69: program begin
+MSG: parser.y: yyparse:91: begin struct definition: name1
+MSG: parser.y: yyparse:144: begin func decl: PRIVATE INT name12
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:146: end func declaration
+
+MSG: parser.y: yyparse:144: begin func decl: PRIVATE UINT name13
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:146: end func declaration
+
+MSG: parser.y: yyparse:149: begin func decl: PRIVATE FLOAT LIST name14
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:151: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE STRING DICT name15
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:93: end of struct definition
+
+MSG: parser.y: yyparse:71: program end
+
+errors: 0 warnings: 0

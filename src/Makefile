@@ -53,6 +53,6 @@ clean:
 	-rm -f parser.output $(OBJS) $(OBJS1) *.bak *~
 
 all_clean: clean
-	-rm -f scanner.c parser.c parser.h $(TARGET) $(DEPS) .indent.pro
+	-rm -f scanner.c parser.c parser.h $(TARGET) $(DEPS)
 
 -include $(DEPS)

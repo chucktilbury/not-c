@@ -1,3 +1,6 @@
+parser.c
+parser.h
+scanner.c
 # Prerequisites
 *.d
 

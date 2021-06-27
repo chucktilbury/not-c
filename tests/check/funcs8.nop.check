@@ -1,0 +1,42 @@
+MSG: parser.y: yyparse:69: program begin
+MSG: parser.y: yyparse:189: begin compound symbol func1
+MSG: parser.y: yyparse:200: begin func def: INT func1
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:202: begin func body
+MSG: parser.y: yyparse:234: 
+open function context
+MSG: parser.y: yyparse:315: var definition: INT var
+MSG: parser.y: yyparse:303: expression assignment item
+MSG: parser.y: yyparse:377: begin comparison expression
+MSG: parser.y: yyparse:189: begin compound symbol var
+MSG: parser.y: yyparse:379: end comparison expression
+MSG: parser.y: yyparse:388: begin while loop body
+open local context
+MSG: parser.y: yyparse:189: begin compound symbol var
+MSG: parser.y: yyparse:189: begin compound symbol var
+MSG: parser.y: yyparse:303: expression assignment item
+MSG: parser.y: yyparse:390: end while loop body
+close local context
+MSG: parser.y: yyparse:189: begin compound symbol var
+MSG: parser.y: yyparse:303: expression assignment item
+MSG: parser.y: yyparse:396: begin do loop body
+open local context
+MSG: parser.y: yyparse:234: 
+open function context
+MSG: parser.y: yyparse:189: begin compound symbol var
+MSG: parser.y: yyparse:189: begin compound symbol var
+MSG: parser.y: yyparse:303: expression assignment item
+MSG: parser.y: yyparse:236: 
+close function context
+MSG: parser.y: yyparse:398: end do loop body
+close local context
+MSG: parser.y: yyparse:377: begin comparison expression
+MSG: parser.y: yyparse:189: begin compound symbol var
+MSG: parser.y: yyparse:379: end comparison expression
+MSG: parser.y: yyparse:236: 
+close function context
+MSG: parser.y: yyparse:204: end func body
+
+MSG: parser.y: yyparse:71: program end
+
+errors: 0 warnings: 0

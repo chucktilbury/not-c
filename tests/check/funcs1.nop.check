@@ -1,0 +1,88 @@
+MSG: parser.y: yyparse:69: program begin
+MSG: parser.y: yyparse:91: begin struct definition: func_test1
+MSG: parser.y: yyparse:144: begin func decl: PUBLIC INT func1
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:146: end func declaration
+
+MSG: parser.y: yyparse:149: begin func decl: PUBLIC STRING LIST func2
+MSG: parser.y: yyparse:217: func parameter def: INT p1
+MSG: parser.y: yyparse:217: func parameter def: INT p2
+MSG: parser.y: yyparse:151: end func declaration
+
+MSG: parser.y: yyparse:93: end of struct definition
+
+MSG: parser.y: yyparse:189: begin compound symbol func_test1
+MSG: parser.y: yyparse:193: add to compound symbol func2
+MSG: parser.y: yyparse:200: begin func def: STRING func_test1.func2
+MSG: parser.y: yyparse:217: func parameter def: INT p1
+MSG: parser.y: yyparse:217: func parameter def: INT p2
+MSG: parser.y: yyparse:202: begin func body
+MSG: parser.y: yyparse:234: 
+open function context
+MSG: parser.y: yyparse:315: var definition: STRING str
+MSG: parser.y: yyparse:189: begin compound symbol system
+MSG: parser.y: yyparse:193: add to compound symbol make_string
+MSG: parser.y: yyparse:477: func call to system.make_string
+MSG: parser.y: yyparse:189: begin compound symbol p1
+MSG: parser.y: yyparse:493: func call expression parameter
+MSG: parser.y: yyparse:189: begin compound symbol p2
+MSG: parser.y: yyparse:493: func call expression parameter
+MSG: parser.y: yyparse:479: end func call
+MSG: parser.y: yyparse:303: expression assignment item
+MSG: parser.y: yyparse:189: begin compound symbol str
+MSG: parser.y: yyparse:352: return expression
+MSG: parser.y: yyparse:236: 
+close function context
+MSG: parser.y: yyparse:204: end func body
+
+MSG: parser.y: yyparse:189: begin compound symbol func_test1
+MSG: parser.y: yyparse:193: add to compound symbol func1
+MSG: parser.y: yyparse:200: begin func def: INT func_test1.func1
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:202: begin func body
+MSG: parser.y: yyparse:234: 
+open function context
+MSG: parser.y: yyparse:315: var definition: STRING var1
+MSG: parser.y: yyparse:189: begin compound symbol func2
+MSG: parser.y: yyparse:477: func call to func2
+MSG: parser.y: yyparse:493: func call expression parameter
+MSG: parser.y: yyparse:493: func call expression parameter
+MSG: parser.y: yyparse:479: end func call
+MSG: parser.y: yyparse:303: expression assignment item
+MSG: parser.y: yyparse:189: begin compound symbol system
+MSG: parser.y: yyparse:193: add to compound symbol make_int
+MSG: parser.y: yyparse:477: func call to system.make_int
+MSG: parser.y: yyparse:189: begin compound symbol var1
+MSG: parser.y: yyparse:493: func call expression parameter
+MSG: parser.y: yyparse:479: end func call
+MSG: parser.y: yyparse:352: return expression
+MSG: parser.y: yyparse:236: 
+close function context
+MSG: parser.y: yyparse:204: end func body
+
+MSG: parser.y: yyparse:207: begin entry body def
+MSG: parser.y: yyparse:234: 
+open function context
+MSG: parser.y: yyparse:315: var definition: INT nargs
+MSG: parser.y: yyparse:189: begin compound symbol system
+MSG: parser.y: yyparse:193: add to compound symbol argc
+MSG: parser.y: yyparse:303: expression assignment item
+MSG: parser.y: yyparse:321: var definition: STRING LIST args
+MSG: parser.y: yyparse:189: begin compound symbol system
+MSG: parser.y: yyparse:193: add to compound symbol argv
+MSG: parser.y: yyparse:256: list initializer with compound symbol: system.argv
+MSG: parser.y: yyparse:315: var definition: INT var
+MSG: parser.y: yyparse:189: begin compound symbol func_test1
+MSG: parser.y: yyparse:193: add to compound symbol func1
+MSG: parser.y: yyparse:477: func call to func_test1.func1
+MSG: parser.y: yyparse:485: blank function call parameters
+MSG: parser.y: yyparse:479: end func call
+MSG: parser.y: yyparse:303: expression assignment item
+MSG: parser.y: yyparse:189: begin compound symbol var
+MSG: parser.y: yyparse:355: exit expression
+MSG: parser.y: yyparse:236: 
+close function context
+MSG: parser.y: yyparse:209: end entry body def
+MSG: parser.y: yyparse:71: program end
+
+errors: 0 warnings: 0

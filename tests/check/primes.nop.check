@@ -1,0 +1,27 @@
+MSG: parser.y: yyparse:69: program begin
+MSG: parser.y: yyparse:189: begin compound symbol checkPrimeNumber
+MSG: parser.y: yyparse:200: begin func def: INT checkPrimeNumber
+MSG: parser.y: yyparse:217: func parameter def: INT n
+MSG: parser.y: yyparse:202: begin func body
+MSG: parser.y: yyparse:189: begin compound symbol main
+MSG: parser.y: yyparse:200: begin func def: INT main
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:202: begin func body
+MSG: parser.y: yyparse:234: 
+open function context
+MSG: parser.y: yyparse:315: var definition: INT n1
+primes.nop: line 6: at 29: syntax error, unexpected ';', expecting '{'
+Warning: primes.nop: 10: 21: unrecognized character: & (0x26)
+Warning: primes.nop: 10: 26: unrecognized character: & (0x26)
+MSG: parser.y: yyparse:189: begin compound symbol checkPrimeNumber
+MSG: parser.y: yyparse:200: begin func def: INT checkPrimeNumber
+MSG: parser.y: yyparse:217: func parameter def: INT n
+MSG: parser.y: yyparse:202: begin func body
+MSG: parser.y: yyparse:234: 
+open function context
+MSG: parser.y: yyparse:315: var definition: INT j
+primes.nop: line 8: at 12: syntax error, unexpected ',', expecting '=' or ';'
+MSG: parser.y: yyparse:71: program end
+
+primes.nop: line 25: at 11: syntax error, unexpected ',', expecting '=' or ';'
+errors: 3 warnings: 2

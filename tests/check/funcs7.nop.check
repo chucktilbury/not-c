@@ -1,0 +1,39 @@
+MSG: parser.y: yyparse:69: program begin
+MSG: parser.y: yyparse:189: begin compound symbol func
+MSG: parser.y: yyparse:200: begin func def: INT func
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:202: begin func body
+MSG: parser.y: yyparse:234: 
+open function context
+MSG: parser.y: yyparse:315: var definition: STRING var
+MSG: parser.y: yyparse:189: begin compound symbol var1
+MSG: parser.y: yyparse:189: begin compound symbol var2
+MSG: parser.y: yyparse:306: formatted string assignment item
+MSG: parser.y: yyparse:321: var definition: STRING LIST var4
+MSG: parser.y: yyparse:306: formatted string assignment item
+MSG: parser.y: yyparse:262: begin list assignment list
+MSG: parser.y: yyparse:189: begin compound symbol var1
+MSG: parser.y: yyparse:306: formatted string assignment item
+MSG: parser.y: yyparse:265: add list assignment list
+MSG: parser.y: yyparse:189: begin compound symbol var1
+MSG: parser.y: yyparse:189: begin compound symbol var2
+MSG: parser.y: yyparse:189: begin compound symbol var3
+MSG: parser.y: yyparse:306: formatted string assignment item
+MSG: parser.y: yyparse:265: add list assignment list
+MSG: parser.y: yyparse:253: list initializer with data
+MSG: parser.y: yyparse:330: var definition: STRING DICT var1
+MSG: parser.y: yyparse:189: begin compound symbol var1
+MSG: parser.y: yyparse:275: dict initializer: nam1 formatted string
+MSG: parser.y: yyparse:282: begin dict assignment list
+MSG: parser.y: yyparse:275: dict initializer: nam2 formatted string
+MSG: parser.y: yyparse:285: add dict assignment list
+MSG: parser.y: yyparse:294: dict initalizer with data
+MSG: parser.y: yyparse:315: var definition: STRING var3
+MSG: parser.y: yyparse:306: formatted string assignment item
+MSG: parser.y: yyparse:236: 
+close function context
+MSG: parser.y: yyparse:204: end func body
+
+MSG: parser.y: yyparse:71: program end
+
+errors: 0 warnings: 0

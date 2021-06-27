@@ -1,0 +1,83 @@
+MSG: parser.y: yyparse:69: program begin
+MSG: parser.y: yyparse:91: begin struct definition: test_dict_func
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE INT DICT name36
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE UINT DICT name37
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE FLOAT DICT name38
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE STRING DICT name39
+MSG: parser.y: yyparse:215: empty function decl list
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE INT DICT name40
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE UINT DICT name41
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE FLOAT DICT name42
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE STRING DICT name43
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE INT DICT name44
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:217: func parameter def: STRING arg2
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE UINT DICT name45
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:217: func parameter def: STRING arg2
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE FLOAT DICT name46
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:217: func parameter def: STRING arg2
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE STRING DICT name47
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:217: func parameter def: STRING arg2
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE INT DICT name48
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:217: func parameter def: STRING arg2
+MSG: parser.y: yyparse:217: func parameter def: FLOAT arg3
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE UINT DICT name49
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:217: func parameter def: STRING arg2
+MSG: parser.y: yyparse:217: func parameter def: FLOAT arg3
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE FLOAT DICT name50
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:217: func parameter def: STRING arg2
+MSG: parser.y: yyparse:217: func parameter def: FLOAT arg3
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:154: begin func decl: PRIVATE STRING DICT name51
+MSG: parser.y: yyparse:217: func parameter def: INT arg1
+MSG: parser.y: yyparse:217: func parameter def: STRING arg2
+MSG: parser.y: yyparse:217: func parameter def: FLOAT arg3
+MSG: parser.y: yyparse:156: end func declaration
+
+MSG: parser.y: yyparse:93: end of struct definition
+
+MSG: parser.y: yyparse:71: program end
+
+errors: 0 warnings: 0
