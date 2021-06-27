@@ -4,7 +4,7 @@
 #include "scanner.h"
 
 static struct {
-    FILE* fp;
+    FILE *fp;
     int errors;
     int warnings;
 } errors;
@@ -12,18 +12,18 @@ static struct {
 // messages longer than this will be truncated to this length.
 static char msg_buff[132];
 
-void init_errors(FILE* fp) {
+void init_errors(FILE * fp) {
 
-    errors.fp = fp;   // If this is NULL, then stderr will be used.
+    errors.fp = fp;             // If this is NULL, then stderr will be used.
     errors.errors = 0;
     errors.warnings = 0;
     //atexit(report);
 }
 
-void syntax(const char* str, ...) {
+void syntax(const char *str, ...) {
 
     va_list args;
-    const char* name = get_file_name();
+    const char *name = get_file_name();
     int lnum = get_line_number();
     int col = get_col_number();
 
@@ -41,10 +41,10 @@ void syntax(const char* str, ...) {
     fprintf(stderr, "%s\n", msg_buff);
 }
 
-void warning(const char* str, ...) {
+void warning(const char *str, ...) {
 
     va_list args;
-    const char* name = get_file_name();
+    const char *name = get_file_name();
     int lnum = get_line_number();
     int col = get_col_number();
 
@@ -62,7 +62,7 @@ void warning(const char* str, ...) {
     fprintf(stderr, "%s\n", msg_buff);
 }
 
-void fatal_error(const char* str, ...) {
+void fatal_error(const char *str, ...) {
 
     va_list args;
 
@@ -90,14 +90,14 @@ int get_num_warnings() {
 
 void inc_error_count() {
 
-    errors.errors ++;
+    errors.errors++;
 }
 
 void inc_warning_count() {
-    errors.warnings ++;
+    errors.warnings++;
 }
 
-FILE* get_err_stream() {
+FILE *get_err_stream() {
     return errors.fp;
 }
 
@@ -109,15 +109,12 @@ FILE* get_err_stream() {
  * etc. Called using the ABORT() macro found in the error.h header file.
  *
  */
-void internal_assert(const char* file, const char* func, int line,
-                     const char* expr, int expr_val, const char* str, ...) {
+void internal_assert(const char *file, const char *func, int line, const char *expr, int expr_val, const char *str, ...) {
 
     if(!expr_val) {
         va_list args;
 
-        snprintf(msg_buff,
-                sizeof(msg_buff), "fatal error: %s: %s:%d assert failed: (%s): ",
-                file, func, line, expr);
+        snprintf(msg_buff, sizeof(msg_buff), "fatal error: %s: %s:%d assert failed: (%s): ", file, func, line, expr);
 
         int len = strlen(msg_buff);
 
@@ -130,14 +127,11 @@ void internal_assert(const char* file, const char* func, int line,
     }
 }
 
-void message(const char* file, const char* func,
-                int line, const char* fmt, ...) {
+void message(const char *file, const char *func, int line, const char *fmt, ...) {
 
     va_list args;
 
-    snprintf(msg_buff,
-            sizeof(msg_buff), "MSG: %s: %s:%d: ",
-            file, func, line);
+    snprintf(msg_buff, sizeof(msg_buff), "MSG: %s: %s:%d: ", file, func, line);
 
     int len = strlen(msg_buff);
 

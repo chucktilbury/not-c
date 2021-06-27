@@ -7,7 +7,7 @@ PLATNAME := $(shell uname)
 
 OBJS	=	ast.o \
 			errors.o \
-			main.o \
+			nop.o \
 			memory.o \
 			symbols.o \
 			constants.o

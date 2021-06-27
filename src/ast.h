@@ -5,7 +5,7 @@
  * parser has a data structure for it.
  */
 #ifndef __AST_H__
-#define __AST_H__
+#  define __AST_H__
 
 
 #endif
