@@ -1,0 +1,40 @@
+
+/*
+ * This tests that generic function definition syntax works. The code it
+ * ideomatic, if contrived. Since a function declaration cannot be outside
+ * of a struct, then the struct is provided as well. Though the actual syntax
+ * does not require it, the semantics do require that a function definition
+ * is first declared in a struct.
+ */
+
+struct func_test1 {
+
+    public int func1();
+    public string list func2(int p1, int p2);
+};
+
+string func_test1.func2(int p1, int p2) {
+
+    string str = system.make_string(p1, p2);
+    return str;
+}
+
+// function bodies cannot be blank
+int func_test1.func1() {
+
+    // Since func2 is defined in func_test1, it is local to this scope.
+    string var1 = func2(12 * (2 + 1), 123);
+    return system.make_int(var1);
+}
+
+// Entry is the equivalent of "main" in C. It does not accept any parameters.
+// Things like argc and argv are retrieved as global variables.
+entry {
+
+    int nargs = system.argc;
+    string list args = system.argv;
+
+    // do the things
+    int var = func_test1.func1();
+    exit var;
+}

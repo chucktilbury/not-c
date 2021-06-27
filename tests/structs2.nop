@@ -1,0 +1,12 @@
+/*
+ * Test simple function declarations
+ */
+
+struct name1 {
+
+    int name12();
+    uint name13();
+    float list name14();
+    string dict name15();
+
+};

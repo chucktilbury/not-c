@@ -1,0 +1,29 @@
+
+/*
+ * Verify that if syntax is accepted.
+ */
+
+nothing do_something() {}
+nothing do_another() {}
+nothing do_a_thing() {}
+nothing do_the_things() {}
+
+int func1() {
+
+    int var = 2;
+    if(var == 1) {
+        do_something();
+    }
+    else(var == 5) {
+        do_another();
+    }
+    else(var == 1) {
+        do_a_thing();
+    }
+    else () {
+        do_the_things();
+    }
+    else {
+        exit 1;
+    }
+}

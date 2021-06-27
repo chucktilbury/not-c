@@ -1,0 +1,9 @@
+
+/*
+ * Verify that functions can be defined outside of a struct.
+ */
+
+int func1() {
+
+    int var1;
+}
