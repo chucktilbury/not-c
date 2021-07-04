@@ -1,6 +1,7 @@
 parser.c
 parser.h
 scanner.c
+*.out
 # Prerequisites
 *.d
 

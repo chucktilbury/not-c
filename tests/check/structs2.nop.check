@@ -1,22 +1,22 @@
 MSG: parser.y: yyparse:69: program begin
-MSG: parser.y: yyparse:91: begin struct definition: name1
-MSG: parser.y: yyparse:144: begin func decl: PRIVATE INT name12
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:146: end func declaration
+MSG: parser.y: yyparse:100: begin struct definition: name1
+MSG: parser.y: yyparse:153: begin func decl: PRIVATE INT name12
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:155: end func declaration
 
-MSG: parser.y: yyparse:144: begin func decl: PRIVATE UINT name13
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:146: end func declaration
+MSG: parser.y: yyparse:153: begin func decl: PRIVATE UINT name13
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:155: end func declaration
 
-MSG: parser.y: yyparse:149: begin func decl: PRIVATE FLOAT LIST name14
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:151: end func declaration
+MSG: parser.y: yyparse:158: begin func decl: PRIVATE FLOAT LIST name14
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:160: end func declaration
 
-MSG: parser.y: yyparse:154: begin func decl: PRIVATE STRING DICT name15
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:156: end func declaration
+MSG: parser.y: yyparse:163: begin func decl: PRIVATE STRING DICT name15
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:165: end func declaration
 
-MSG: parser.y: yyparse:93: end of struct definition
+MSG: parser.y: yyparse:102: end of struct definition
 
 MSG: parser.y: yyparse:71: program end
 

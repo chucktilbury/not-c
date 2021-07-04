@@ -34,15 +34,15 @@ symbol_t *create_symbol(const char *str) {
 
 // compound symbols are stored as a list of segments. This implementation
 // for development testing only.
-compound_symbol_t *create_compound(const char *str) {
+compound_name_t *create_compound(const char *str) {
 
-    compound_symbol_t *sym = ALLOC_DS(compound_symbol_t);
+    compound_name_t *sym = ALLOC_DS(compound_name_t);
 
     sym->name = STRDUP(str);
     return sym;
 }
 
-void add_compound(compound_symbol_t * sym, const char *str) {
+void add_compound(compound_name_t * sym, const char *str) {
 
     char buf[1024];             // FIXME!
 

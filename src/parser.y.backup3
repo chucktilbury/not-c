@@ -1,0 +1,178 @@
+/*
+ * This is the complete grammar for the NOP programming language.
+ */
+
+%debug
+%defines
+%locations
+
+%{
+
+#include "common.h"
+#include "scanner.h"
+#include "symbols.h"
+#include "constants.h"
+#include "ast.h"
+
+#define TOKSTR get_tok_str()
+
+//%}
+//%define parse.error verbose
+//%locations
+
+%union {
+    int type;
+    int scope;
+    symbol_t* symbol;
+    constant_t* constant;
+    compound_name_t* compound;
+};
+
+    // TODO:
+    //  function overloads (name mangling)
+    //  import feature
+    //  "external" keyword to call an external library routine
+    //  inline keyword and functionality (in scanner)
+    //  support for non-local goto for iterators
+    //  exceptions, strings only...
+    //  multi-dimensional lists and dicts
+    //  lists and dicts hold any type, incl lists and dicts
+
+    // BUGS:
+    // This parser has a problem where it cannot parse a string like "name.name().name"
+    // Parsing a string like "name.name()" is handled correctly. Also "name.name"
+    // is handled without problems.
+
+
+%token <constant> FPCONST INTCONST UINTCONST STRCONST BOOLCONST
+%token <symbol> SYMBOL
+%token <type> DICT LIST BOOL STRING FLOAT INT UINT NOTHING
+
+
+
+%token SWITCH CASE DEFAULT RETURN PUBLIC PRIVATE
+%token IF ELSE WHILE DO BREAK CONTINUE NAMESPACE
+%token AND OR NOT EQ NEQ LTE GTE LT GT
+%token ENTRY EXIT CONST STRUCT INIT DEINIT
+%token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
+
+    // not returned by the scanner
+%token USR_TYPE
+
+%right '=' '.'
+%right ADD_ASSIGN SUB_ASSIGN
+%right MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
+%left AND OR
+%left EQ NEQ
+%left LT GT LTE GTE
+%right ':'
+%left '+' '-'
+%left '*' '/' '%'
+%left NEG
+%right NOT
+
+
+%%
+program
+    : {} all_module {}
+    ;
+
+all_module
+    : module_list
+    ;
+
+module_list
+    : module_element {}
+    | module_list module_element {}
+    ;
+
+module_element
+    : compound_symbol {}
+    //| expression {}
+    ;
+
+compound_name
+    : SYMBOL {}
+    | compound_name '.' SYMBOL {}
+    ;
+
+compound_symbol_element
+    : compound_name {}
+    | func_call {}
+    ;
+
+compound_symbol
+    : compound_symbol_element {}
+    | compound_symbol '.' compound_symbol_element {}
+    ;
+
+func_call
+    : compound_name '(' ')' {}
+    ;
+
+/* formatted_string
+    : STRCONST {}
+    | STRCONST '(' expression_list ')' {}
+    ;
+
+type_specifier
+    : STRING {}
+    | FLOAT  {}
+    | INT    {}
+    | UINT   {}
+    | BOOL   {}
+    | NOTHING {}
+    ;
+
+constant
+    : FPCONST {}
+    | INTCONST {}
+    | UINTCONST {}
+    | BOOLCONST {}
+    | NOTHING {}
+    ;
+
+expression_factor
+    : constant { }
+    | compound_symbol { }
+    | formatted_string {}
+    ;
+
+expression
+    : expression_factor {}
+    | expression '+' expression {}
+    | expression '-' expression {}
+    | expression '*' expression {}
+    | expression '/' expression {}
+    | expression '%' expression {}
+    | expression EQ expression {}
+    | expression NEQ expression {}
+    | expression LT expression {}
+    | expression GT expression {}
+    | expression LTE expression {}
+    | expression GTE expression {}
+    | expression AND expression {}
+    | expression OR expression {}
+    | '-' expression %prec NEG {}
+    | NOT expression {  }
+    | type_specifier ':' SYMBOL {}
+    | '(' expression ')' {}
+    ;
+
+expression_list
+    : expression {}
+    | expression_list ',' expression {}
+    ; */
+
+%%
+
+#include <stdio.h>
+
+extern char yytext[];
+
+void yyerror(const char* s)
+{
+    fflush(stderr);
+    fprintf(stderr, "Syntax Error: %s: line %d: at %d: %s\n", get_file_name(), get_line_number(), get_col_number(), s);
+    inc_error_count();
+}

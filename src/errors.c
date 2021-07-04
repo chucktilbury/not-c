@@ -127,11 +127,14 @@ void internal_assert(const char *file, const char *func, int line, const char *e
     }
 }
 
-void message(const char *file, const char *func, int line, const char *fmt, ...) {
+/*
+ * Generic messaging.
+ */
+void message(const char *name, const char *file, const char *func, int line, const char *fmt, ...) {
 
     va_list args;
 
-    snprintf(msg_buff, sizeof(msg_buff), "MSG: %s: %s:%d: ", file, func, line);
+    snprintf(msg_buff, sizeof(msg_buff), "%s: %s: %s:%d: ", name, file, func, line);
 
     int len = strlen(msg_buff);
 

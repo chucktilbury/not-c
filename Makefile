@@ -12,8 +12,8 @@ clean:
 	make -C src clean
 	make -C tests clean
 
-all_clean:
-	make-C src all_clean
+allclean:
+	make -C src allclean
 
 pretty:
 	make -C src pretty

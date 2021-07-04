@@ -1,5 +1,7 @@
 MSG: parser.y: yyparse:69: program begin
+MSG: parser.y: yyparse:92: begin namespace definition: tree
+Syntax Error: tree.nop: line 6: at 2: syntax error, unexpected '}'
+MSG: parser.y: yyparse:94: end namespace definition
 MSG: parser.y: yyparse:71: program end
 
-no name: line -1: at -1: syntax error, unexpected $end
 errors: 1 warnings: 0

@@ -1,0 +1,480 @@
+/*
+ * This is the complete grammar for the NOP programming language.
+ */
+
+%debug
+%defines
+%locations
+
+%{
+
+#include "common.h"
+#include "scanner.h"
+#include "symbols.h"
+#include "constants.h"
+#include "ast.h"
+
+#define TOKSTR get_tok_str()
+
+%}
+%define parse.error verbose
+%locations
+
+%union {
+    int type;
+    int scope;
+    symbol_t* symbol;
+    constant_t* constant;
+    compound_name_t* compound;
+};
+
+    // TODO:
+    //  function overloads (name mangling)
+    //  import feature
+    //  "external" keyword to call an external library routine
+    //  inline keyword and functionality (in scanner)
+    //  support for non-local goto for iterators
+    //  exceptions, strings only...
+    //  multi-dimensional lists and dicts
+    //  lists and dicts hold any type, incl lists and dicts
+
+    // BUGS:
+    // This parser has a problem where it cannot parse a string like "name.name().name"
+    // Parsing a string like "name.name()" is handled correctly. Also "name.name"
+    // is handled without problems.
+
+
+%token <constant> FPCONST INTCONST UINTCONST STRCONST BOOLCONST
+%token <symbol> SYMBOL
+%token <type> DICT LIST BOOL STRING FLOAT INT UINT NOTHING
+
+%type <type> type_specifier compound_type
+%type <constant> expression constant
+%type <scope> scope_specifier
+%type <compound> compound_name init_preamble
+
+%token SWITCH CASE DEFAULT RETURN PUBLIC PRIVATE
+%token IF ELSE WHILE DO BREAK CONTINUE NAMESPACE
+%token AND OR NOT EQ NEQ LTE GTE LT GT
+%token ENTRY EXIT CONST STRUCT INIT DEINIT
+%token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
+
+    // not returned by the scanner
+%token USR_TYPE
+
+%right '='
+%right ADD_ASSIGN SUB_ASSIGN
+%right MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
+%left AND OR
+%left EQ NEQ
+%left LT GT LTE GTE
+%right ':'
+%left '+' '-'
+%left '*' '/' '%'
+%left NEG
+%right NOT
+
+
+%%
+    /*
+        Module rules.
+     */
+program:
+        {} all_module {}
+    ;
+
+all_module: module_list
+    ;
+
+module_list:
+      module_element {}
+    | module_list module_element {}
+    ;
+
+module_element:
+      struct_definition {}
+    | func_definition {}
+    | namespace_definition {}
+    ;
+
+namespace_definition:
+      NAMESPACE SYMBOL {} '{' module_list '}' {}
+    ;
+
+struct_definition:
+      STRUCT SYMBOL {} '{' struct_list '}' {}
+    ;
+
+struct_list:
+      struct_element {}
+    | struct_list struct_element {}
+    ;
+
+struct_element:
+      var_declaration {}
+    | func_declaration {}
+    ;
+
+
+scope_specifier:
+      /* blank specifier */ { $$ = PRIVATE; }
+    | PUBLIC {}
+    | PRIVATE {}
+    ;
+
+var_declaration:
+      scope_specifier CONST compound_type SYMBOL {}
+    | scope_specifier compound_type SYMBOL {}
+    | scope_specifier compound_type LIST SYMBOL {}
+    | scope_specifier compound_type DICT SYMBOL {}
+    ;
+
+init_preamble:
+      compound_name '.' {}
+    ;
+
+func_declaration:
+      scope_specifier compound_type SYMBOL '(' func_def_parms ')' {}
+    | scope_specifier compound_type LIST SYMBOL '(' func_def_parms ')' {}
+    | scope_specifier compound_type DICT SYMBOL '(' func_def_parms ')' {}
+    | INIT '(' func_def_parms ')' {}
+    | DEINIT '(' ')' {}
+    | DEINIT {}
+    | error
+    ;
+
+compound_name:
+      SYMBOL { $$ = create_compound($1->name); }
+    | compound_name '.' SYMBOL { add_compound($1, $3->name); }
+    ;
+
+compound_symbol_element:
+      compound_name {}
+    | func_call {}
+    ;
+
+compound_symbol:
+      compound_symbol_element {}
+    | compound_symbol '.' compound_symbol_element {}
+    ;
+
+func_definition:
+      compound_type compound_name '(' func_def_parms ')' func_body {}
+    | ENTRY func_body {}
+    | init_preamble INIT '(' func_def_parms ')' func_body {}
+    | init_preamble DEINIT func_body {}
+    | init_preamble DEINIT '(' ')' func_body {}
+    | error
+    ;
+
+func_def_parms_element:
+      /* empty */ {}
+    | compound_type SYMBOL {}
+    | compound_type LIST SYMBOL {}
+    | compound_type DICT SYMBOL {}
+    ;
+
+func_def_parms:
+      func_def_parms_element {}
+    | func_def_parms ',' func_def_parms_element {}
+    ;
+
+func_body:
+      '{' func_body_list '}' {}
+    | '{' '}' {}
+    ;
+
+func_body_list:
+      func_body_element {}
+    | func_body_list func_body_element {}
+    ;
+
+list_initializer:
+      '[' list_initializer_list ']' {}
+    ;
+
+list_initializer_list:
+      assignment_element {}
+    | list_initializer_list ',' assignment_element {}
+    ;
+
+dict_initializer_element:
+      SYMBOL '=' expression {}
+    | SYMBOL '=' formatted_string {}
+    ;
+
+dict_initializer_list:
+      dict_initializer_element {}
+    | dict_initializer_list ',' dict_initializer_element {}
+    ;
+
+dict_initializer:
+     '[' dict_initializer_list ']' {}
+    ;
+
+assignment_element
+    : {}
+    | expression {}
+    | formatted_string {}
+    ;
+
+assignment_element_list:
+      assignment_element {}
+    | assignment_element_list ',' assignment_element {}
+
+var_definition:
+      compound_type SYMBOL {}
+    ;
+
+list_definition:
+      compound_type LIST SYMBOL {}
+    ;
+
+dict_definition:
+      compound_type DICT SYMBOL {}
+    ;
+
+assignment_dest
+    : var_definition {}
+    //| compound_name {}
+    | compound_symbol {}
+    | list_definition {}
+    | dict_definition {}
+    | list_reference {}
+    | dict_reference {}
+    ;
+
+assignment_source:
+      expression {}
+    | list_initializer {}
+    | dict_initializer {}
+    ;
+
+
+func_body_element:
+      var_definition {}
+    | list_definition {}
+    | dict_definition {}
+    | assignment_dest '=' assignment_source {}
+    | func_call {}
+    | while_statement {}
+    | do_statement {}
+    | if_statement {}
+    | switch_statement {}
+    | func_body {}
+    | RETURN expression {}
+    | EXIT expression {}
+    | BREAK {}
+    | CONTINUE {}
+    | compound_name ADD_ASSIGN expression {}
+    | compound_name SUB_ASSIGN expression {}
+    | compound_name MUL_ASSIGN expression {}
+    | compound_name DIV_ASSIGN expression {}
+    | compound_name MOD_ASSIGN expression {}
+    ;
+
+comparison_expr:
+      '(' expression ')' {}
+    | '(' ')' {}
+    ;
+
+while_statement:
+      WHILE comparison_expr func_body {}
+    ;
+
+do_statement:
+      DO func_body WHILE comparison_expr
+    ;
+
+if_introduction:
+      IF comparison_expr {}
+    ;
+
+if_statement:
+      if_introduction func_body {}
+    | if_introduction func_body else_clause_list {}
+    ;
+
+else_clause:
+      ELSE comparison_expr func_body {}
+    | ELSE func_body {}
+    ;
+
+else_clause_list:
+      else_clause {}
+    | else_clause_list else_clause {}
+    ;
+
+switch_statement:
+      SWITCH comparison_expr '{' case_clause '}' {}
+    ;
+
+default_clause:
+      DEFAULT func_body {}
+    ;
+
+case_base:
+      CASE '(' constant ')' func_body {}
+    ;
+
+case_clause:
+      case_clause_list {}
+    | case_clause_list default_clause {}
+    ;
+
+case_clause_list:
+      case_base {}
+    | case_clause_list case_base {}
+    ;
+
+func_call:
+      compound_name '(' assignment_element_list ')' {}
+    | compound_name '(' ')' {}
+    ;
+
+formatted_string
+    : STRCONST {}
+    | STRCONST '(' expression_list ')' {}
+    ;
+
+compound_type:
+      type_specifier { $$ = $1; }
+    | compound_name { $$ = USR_TYPE; }
+    ;
+
+type_specifier:
+      STRING {}
+    | FLOAT  {}
+    | INT    {}
+    | UINT   {}
+    | BOOL   {}
+    | NOTHING {}
+    ;
+
+list_reference
+    : compound_name '[' expression ']' {}
+    | compound_name '[' ']' {}
+    ;
+
+dict_reference:
+      compound_name '[' formatted_string ']' {}
+    ;
+
+constant:
+      FPCONST {}
+    | INTCONST {}
+    | UINTCONST {}
+    | BOOLCONST {}
+    | NOTHING {}
+    ;
+
+expression_factor
+    : constant { }
+    | compound_symbol { }
+    | list_reference {}
+    | dict_reference {}
+    | formatted_string {}
+    //| func_call {}
+    ;
+
+expression
+    : expression_factor {}
+    | expression '+' expression {}
+    | expression '-' expression {}
+    | expression '*' expression {}
+    | expression '/' expression {}
+    | expression '%' expression {}
+    | expression EQ expression {}
+    | expression NEQ expression {}
+    | expression LT expression {}
+    | expression GT expression {}
+    | expression LTE expression {}
+    | expression GTE expression {}
+    | expression AND expression {}
+    | expression OR expression {}
+    | '-' expression %prec NEG {}
+    | NOT expression {  }
+    | type_specifier ':' SYMBOL {}
+    | '(' expression ')' {}
+    ;
+
+expression_list
+    : expression {}
+    | expression_list ',' expression {}
+    ;
+
+/* expression
+    : arith_term {}
+    ;
+
+arith_term
+    : arith_term '+' arith_factor {}
+    | arith_term '-' arith_factor {}
+    | arith_factor {}
+    ;
+
+arith_factor
+    : arith_factor '*' arith_unary {}
+    | arith_factor '/' arith_unary {}
+    | arith_factor '%' arith_unary {}
+    | arith_unary {}
+    ;
+
+arith_unary
+    : '-' primary {}
+    | primary {}
+    ;
+
+primary
+    : constant { }
+    | compound_symbol { }
+    //| compound_name { }
+    | list_reference {}
+    | dict_reference {}
+    //| func_call {}
+    | '(' arith_term ')' {}
+    | '-' primary {}
+    | type_specifier ':' SYMBOL{}
+    ;
+
+comp_expression
+    : cmp_magnitude {}
+    ;
+
+cmp_magnitude
+    : cmp_magnitude LT cmp_equality {}
+    | cmp_magnitude GT cmp_equality {}
+    | cmp_magnitude LTE cmp_equality {}
+    | cmp_magnitude GTE cmp_equality {}
+    | cmp_equality {}
+    ;
+
+cmp_equality
+    : cmp_equality EQ cmp_unary {}
+    | cmp_equality NEQ cmp_unary {}
+    | cmp_unary {}
+    ;
+
+cmp_unary
+    : NOT cmp_boolean {}
+    | cmp_boolean {}
+    ;
+
+cmp_boolean
+    : cmp_boolean AND primary {}
+    | cmp_boolean OR primary {}
+    | primary {}
+    ; */
+
+%%
+
+#include <stdio.h>
+
+extern char yytext[];
+
+void yyerror(const char* s)
+{
+    fflush(stderr);
+    fprintf(stderr, "Syntax Error: %s: line %d: at %d: %s\n", get_file_name(), get_line_number(), get_col_number(), s);
+    inc_error_count();
+}

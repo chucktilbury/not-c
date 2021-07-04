@@ -1,14 +1,14 @@
 MSG: parser.y: yyparse:69: program begin
-MSG: parser.y: yyparse:189: begin compound symbol func1
-MSG: parser.y: yyparse:200: begin func def: INT func1
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:202: begin func body
-MSG: parser.y: yyparse:234: 
+MSG: parser.y: yyparse:198: begin compound symbol func1
+MSG: parser.y: yyparse:209: begin func def: INT func1
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:211: begin func body
+MSG: parser.y: yyparse:243: 
 open function context
-MSG: parser.y: yyparse:315: var definition: INT var1
-MSG: parser.y: yyparse:236: 
+MSG: parser.y: yyparse:324: var definition: INT var1
+MSG: parser.y: yyparse:245: 
 close function context
-MSG: parser.y: yyparse:204: end func body
+MSG: parser.y: yyparse:213: end func body
 
 MSG: parser.y: yyparse:71: program end
 

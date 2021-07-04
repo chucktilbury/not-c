@@ -27,7 +27,7 @@ CARGS	=	-Wall -Wextra
 HSRC	= 	-I.
 
 # comment this out to disable messages
-DEBUG	=	-g -DTRACE
+DEBUG	=	-g -DPTRACE
 
 .PHONY: all pretty clean all_clean
 
@@ -52,7 +52,7 @@ pretty:
 clean:
 	-rm -f parser.output $(OBJS) $(OBJS1) *.bak *~
 
-all_clean: clean
+allclean: clean
 	-rm -f scanner.c parser.c parser.h $(TARGET) $(DEPS)
 
 -include $(DEPS)

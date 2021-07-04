@@ -1,77 +1,77 @@
 MSG: parser.y: yyparse:69: program begin
-MSG: parser.y: yyparse:91: begin struct definition: test_var_assign
-MSG: parser.y: yyparse:120: var declaration: PRIVATE INT var
-MSG: parser.y: yyparse:511: NOTHING type specifier
-MSG: parser.y: yyparse:144: begin func decl: PUBLIC NOTHING var_assign
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:146: end func declaration
+MSG: parser.y: yyparse:100: begin struct definition: test_var_assign
+MSG: parser.y: yyparse:129: var declaration: PRIVATE INT var
+MSG: parser.y: yyparse:520: NOTHING type specifier
+MSG: parser.y: yyparse:153: begin func decl: PUBLIC NOTHING var_assign
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:155: end func declaration
 
-MSG: parser.y: yyparse:93: end of struct definition
+MSG: parser.y: yyparse:102: end of struct definition
 
-MSG: parser.y: yyparse:511: NOTHING type specifier
-MSG: parser.y: yyparse:189: begin compound symbol var_assign
-MSG: parser.y: yyparse:200: begin func def: NOTHING var_assign
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:202: begin func body
-MSG: parser.y: yyparse:234: 
+MSG: parser.y: yyparse:520: NOTHING type specifier
+MSG: parser.y: yyparse:198: begin compound symbol var_assign
+MSG: parser.y: yyparse:209: begin func def: NOTHING var_assign
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:211: begin func body
+MSG: parser.y: yyparse:243: 
 open function context
-MSG: parser.y: yyparse:315: var definition: INT var1
-MSG: parser.y: yyparse:189: begin compound symbol var
-MSG: parser.y: yyparse:303: expression assignment item
-MSG: parser.y: yyparse:315: var definition: UINT var2
-MSG: parser.y: yyparse:189: begin compound symbol var1
-MSG: parser.y: yyparse:303: expression assignment item
-MSG: parser.y: yyparse:315: var definition: BOOL var3
-MSG: parser.y: yyparse:189: begin compound symbol var2
-MSG: parser.y: yyparse:303: expression assignment item
-MSG: parser.y: yyparse:315: var definition: FLOAT var4
-MSG: parser.y: yyparse:189: begin compound symbol var3
-MSG: parser.y: yyparse:303: expression assignment item
-MSG: parser.y: yyparse:315: var definition: STRING var5
-MSG: parser.y: yyparse:189: begin compound symbol var4
-MSG: parser.y: yyparse:303: expression assignment item
-MSG: parser.y: yyparse:312: var definition: some_name var6
-MSG: parser.y: yyparse:189: begin compound symbol var5
-MSG: parser.y: yyparse:303: expression assignment item
-MSG: parser.y: yyparse:321: var definition: INT LIST var1
-MSG: parser.y: yyparse:189: begin compound symbol var
-MSG: parser.y: yyparse:256: list initializer with compound symbol: var
-MSG: parser.y: yyparse:321: var definition: UINT LIST var2
-MSG: parser.y: yyparse:189: begin compound symbol var1
-MSG: parser.y: yyparse:256: list initializer with compound symbol: var1
-MSG: parser.y: yyparse:321: var definition: BOOL LIST var3
-MSG: parser.y: yyparse:189: begin compound symbol var2
-MSG: parser.y: yyparse:256: list initializer with compound symbol: var2
-MSG: parser.y: yyparse:321: var definition: FLOAT LIST var4
-MSG: parser.y: yyparse:189: begin compound symbol var3
-MSG: parser.y: yyparse:256: list initializer with compound symbol: var3
-MSG: parser.y: yyparse:321: var definition: STRING LIST var5
-MSG: parser.y: yyparse:189: begin compound symbol var4
-MSG: parser.y: yyparse:256: list initializer with compound symbol: var4
-MSG: parser.y: yyparse:324: var definition: some_name LIST var6
-MSG: parser.y: yyparse:189: begin compound symbol var5
-MSG: parser.y: yyparse:256: list initializer with compound symbol: var5
-MSG: parser.y: yyparse:330: var definition: INT DICT var1
-MSG: parser.y: yyparse:189: begin compound symbol var
-MSG: parser.y: yyparse:297: dict initialzer with compound symbol: var
-MSG: parser.y: yyparse:330: var definition: UINT DICT var2
-MSG: parser.y: yyparse:189: begin compound symbol var1
-MSG: parser.y: yyparse:297: dict initialzer with compound symbol: var1
-MSG: parser.y: yyparse:330: var definition: BOOL DICT var3
-MSG: parser.y: yyparse:189: begin compound symbol var2
-MSG: parser.y: yyparse:297: dict initialzer with compound symbol: var2
-MSG: parser.y: yyparse:330: var definition: FLOAT DICT var4
-MSG: parser.y: yyparse:189: begin compound symbol var3
-MSG: parser.y: yyparse:297: dict initialzer with compound symbol: var3
-MSG: parser.y: yyparse:330: var definition: STRING DICT var5
-MSG: parser.y: yyparse:189: begin compound symbol var4
-MSG: parser.y: yyparse:297: dict initialzer with compound symbol: var4
-MSG: parser.y: yyparse:333: var definition: some_name DICT var6
-MSG: parser.y: yyparse:189: begin compound symbol var5
-MSG: parser.y: yyparse:297: dict initialzer with compound symbol: var5
-MSG: parser.y: yyparse:236: 
+MSG: parser.y: yyparse:324: var definition: INT var1
+MSG: parser.y: yyparse:198: begin compound symbol var
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:324: var definition: UINT var2
+MSG: parser.y: yyparse:198: begin compound symbol var1
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:324: var definition: BOOL var3
+MSG: parser.y: yyparse:198: begin compound symbol var2
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:324: var definition: FLOAT var4
+MSG: parser.y: yyparse:198: begin compound symbol var3
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:324: var definition: STRING var5
+MSG: parser.y: yyparse:198: begin compound symbol var4
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:321: var definition: some_name var6
+MSG: parser.y: yyparse:198: begin compound symbol var5
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:330: var definition: INT LIST var1
+MSG: parser.y: yyparse:198: begin compound symbol var
+MSG: parser.y: yyparse:265: list initializer with compound symbol: var
+MSG: parser.y: yyparse:330: var definition: UINT LIST var2
+MSG: parser.y: yyparse:198: begin compound symbol var1
+MSG: parser.y: yyparse:265: list initializer with compound symbol: var1
+MSG: parser.y: yyparse:330: var definition: BOOL LIST var3
+MSG: parser.y: yyparse:198: begin compound symbol var2
+MSG: parser.y: yyparse:265: list initializer with compound symbol: var2
+MSG: parser.y: yyparse:330: var definition: FLOAT LIST var4
+MSG: parser.y: yyparse:198: begin compound symbol var3
+MSG: parser.y: yyparse:265: list initializer with compound symbol: var3
+MSG: parser.y: yyparse:330: var definition: STRING LIST var5
+MSG: parser.y: yyparse:198: begin compound symbol var4
+MSG: parser.y: yyparse:265: list initializer with compound symbol: var4
+MSG: parser.y: yyparse:333: var definition: some_name LIST var6
+MSG: parser.y: yyparse:198: begin compound symbol var5
+MSG: parser.y: yyparse:265: list initializer with compound symbol: var5
+MSG: parser.y: yyparse:339: var definition: INT DICT var1
+MSG: parser.y: yyparse:198: begin compound symbol var
+MSG: parser.y: yyparse:306: dict initialzer with compound symbol: var
+MSG: parser.y: yyparse:339: var definition: UINT DICT var2
+MSG: parser.y: yyparse:198: begin compound symbol var1
+MSG: parser.y: yyparse:306: dict initialzer with compound symbol: var1
+MSG: parser.y: yyparse:339: var definition: BOOL DICT var3
+MSG: parser.y: yyparse:198: begin compound symbol var2
+MSG: parser.y: yyparse:306: dict initialzer with compound symbol: var2
+MSG: parser.y: yyparse:339: var definition: FLOAT DICT var4
+MSG: parser.y: yyparse:198: begin compound symbol var3
+MSG: parser.y: yyparse:306: dict initialzer with compound symbol: var3
+MSG: parser.y: yyparse:339: var definition: STRING DICT var5
+MSG: parser.y: yyparse:198: begin compound symbol var4
+MSG: parser.y: yyparse:306: dict initialzer with compound symbol: var4
+MSG: parser.y: yyparse:342: var definition: some_name DICT var6
+MSG: parser.y: yyparse:198: begin compound symbol var5
+MSG: parser.y: yyparse:306: dict initialzer with compound symbol: var5
+MSG: parser.y: yyparse:245: 
 close function context
-MSG: parser.y: yyparse:204: end func body
+MSG: parser.y: yyparse:213: end func body
 
 MSG: parser.y: yyparse:71: program end
 

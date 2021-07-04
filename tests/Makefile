@@ -18,9 +18,10 @@ SRCS	=	structs1.nop \
 			funcs9.nop \
 			funcs10.nop \
 			funcs11.nop \
+			namespace1.nop \
 			duplicates.nop \
 			tree.nop \
-			greatest_common_denominator.nop \
+			gcd.nop \
 			recursion.nop \
 			fibonacci.nop \
 			primes.nop
@@ -30,7 +31,7 @@ SRCS	=	structs1.nop \
 all:
 	@for i in $(SRCS); do \
 		../src/nop $${i} > $${i}.out 2>&1; \
-		diff $${i}.out ./check/$${i}.check; \
+		diff $${i}.out ./check/$${i}.check > /dev/null; \
 		if [ $$? -eq 0 ]; then \
 			echo "test $${i} PASSED"; \
 			rm $${i}.out; \

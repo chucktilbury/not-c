@@ -78,10 +78,6 @@ static void update_loc(void){
 //#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 %}
 
-DIGIT   [0-9]
-SYMCH   [a-zA-Z_]
-SYMBOL  ({SYMCH}+({SYMCH}{DIGIT})*)
-
 /* state definitions */
 %x SQUOTES
 %x DQUOTES
@@ -104,8 +100,8 @@ SYMBOL  ({SYMCH}+({SYMCH}{DIGIT})*)
 "list"          { yylval.type = LIST; return LIST; }
 "bool"          { yylval.type = BOOL; return BOOL; }
 "nothing"       { yylval.type = NOTHING; return NOTHING; }
-"true"          { yylval.value = make_bool_const(true); return BOOLCONST; }
-"false"         { yylval.value = make_bool_const(false); return BOOLCONST; }
+"true"          { yylval.constant = make_bool_const(true); return BOOLCONST; }
+"false"         { yylval.constant = make_bool_const(false); return BOOLCONST; }
 "public"        { yylval.scope = PUBLIC; return PUBLIC; }
 "private"       { yylval.scope = PRIVATE; return PRIVATE; }
 
@@ -125,6 +121,7 @@ SYMBOL  ({SYMCH}+({SYMCH}{DIGIT})*)
 "return"        { return RETURN; }
 "const"         { return CONST; }
 "struct"        { return STRUCT; }
+"namespace"     { return NAMESPACE; }
 
     /* boolean operator tokens composed of special characters */
 "and"           { return AND; }
@@ -136,7 +133,6 @@ SYMBOL  ({SYMCH}+({SYMCH}{DIGIT})*)
 "=="            { return EQ; }
 "neq"           { return NEQ; }
 "!="            { return NEQ; }
-"<>"            { return NEQ; }
 "leq"           { return LTE; }
 "<="            { return LTE; }
 "geq"           { return GTE; }
@@ -145,6 +141,11 @@ SYMBOL  ({SYMCH}+({SYMCH}{DIGIT})*)
 "<"             { return LT; }
 "gt"            { return GT; }
 ">"             { return GT; }
+"+="            { return ADD_ASSIGN; }
+"-="            { return SUB_ASSIGN; }
+"*="            { return MUL_ASSIGN; }
+"/="            { return DIV_ASSIGN; }
+"%="            { return MOD_ASSIGN; }
 
         /* arithmetic operators */
 "-"             { return '-'; }
@@ -156,7 +157,7 @@ SYMBOL  ({SYMCH}+({SYMCH}{DIGIT})*)
 
         /* Other operators */
 ","             { return ','; }
-";"             { return ';'; }
+";"             { /* ignore all */ }
 ":"             { return ':'; }
 "["             { return '['; }
 "]"             { return ']'; }
@@ -171,6 +172,7 @@ SYMBOL  ({SYMCH}+({SYMCH}{DIGIT})*)
     /* A simple symbol */
 [a-zA-Z_][a-zA-Z_0-9]* {
         yylval.symbol = create_symbol(yytext);
+        //printf("SYMBOL: %s\n", yytext);
         return SYMBOL;
     }
 
@@ -186,20 +188,20 @@ SYMBOL  ({SYMCH}+({SYMCH}{DIGIT})*)
 
 [0-9]+ {
         //yylval.literal.intval = strtol(yytext, NULL, 10);
-        yylval.value = make_inum_const(strtol(yytext, NULL, 10));
+        yylval.constant = make_inum_const(strtol(yytext, NULL, 10));
         return INTCONST;
     }
 
     /* recognize a float */
 ([0-9]*\.)?[0-9]+([Ee][-+]?[0-9]+)? {
         //yylval.literal.fpval = strtod(yytext, NULL);
-        yylval.value = make_fnum_const(strtod(yytext, NULL));
+        yylval.constant = make_fnum_const(strtod(yytext, NULL));
         return FPCONST;
     }
 
 0[Xx][0-9a-fA-F]+ {
         //yylval.literal.uintval = strtol(yytext, NULL, 16);
-        yylval.value = make_unum_const(strtol(yytext, NULL, 16));
+        yylval.constant = make_unum_const(strtol(yytext, NULL, 16));
         return UINTCONST;
     }
 
@@ -212,7 +214,7 @@ SYMBOL  ({SYMCH}+({SYMCH}{DIGIT})*)
 
 <DQUOTES>\" {
         //yylval.literal.str = STRDUP(buffer);
-        yylval.value = make_strg_const(buffer);
+        yylval.constant = make_strg_const(buffer);
         BEGIN(INITIAL);
         return STRCONST;
     }
@@ -245,7 +247,7 @@ SYMBOL  ({SYMCH}+({SYMCH}{DIGIT})*)
 
 <SQUOTES>\' {
         //yylval.literal.str = STRDUP(buffer);
-        yylval.value = make_strg_const(buffer);
+        yylval.constant = make_strg_const(buffer);
         BEGIN(INITIAL);
         return STRCONST;
     }

@@ -3,38 +3,48 @@
  * Return a list with the duplicates deleted from the given list.
  */
 
-static int remove_duplicates(int* nums, int arr_size)
+int remove_duplicates(int list nums, int arr_size)
 {
     if (arr_size <= 1) {
-        return arr_size;
+        return arr_size
     }
 
-    int i = 0, j, count = 1;
+    int i = 0
+    int j = 1
+    int count = 1
     while (i < arr_size) {
-        for (j = i + 1; j < arr_size && nums[i] == nums[j]; j++) {}
-        if (j < arr_size) {
-            nums[count++] = nums[j];
-        }
-        i = j;
+        do {
+            if (j < arr_size) {
+                nums[count] = nums[j]
+                count = count + 1;
+            }
+            i = j
+            j = j + i
+        } while(j < arr_size and nums[i] == nums[j])
     }
 
     return count;
 }
 
-int main(void)
+entry
 {
-    int nums[] = {1,1,2,3,4,4,5,6,6,6};
-    int size = sizeof(nums)/sizeof(nums[0]);
-    printf("Original array:\n");
-    int i;
-    for (i = 0; i < size; i++) {
-        printf("%d ", nums[i]);
+    int list nums = [1,1,2,3,4,4,5,6,6,6]
+    int size = nums.length
+
+    system.print("Original array")
+
+    int i = 0
+    while( i < size) {
+        system.print(nums[i], ", ")
+        i = i + 1
     }
-    int count = remove_duplicates(nums, size);
-    printf("\nAfter removing duplicates from the above sorted array:\n");
-    for (i = 0; i < count; i++) {
-        printf("%d ", nums[i]);
+
+    int count = remove_duplicates(nums, size)
+    system.print("\nAfter removing duplicates from the above sorted array")
+    while( i < size) {
+        system.print(nums[i], ", ")
+        i = i + 1
     }
-    printf("\n");
-    return 0;
+
+    system.print("\n")
 }

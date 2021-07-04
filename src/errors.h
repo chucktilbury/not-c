@@ -7,7 +7,7 @@ void init_errors(FILE * fp);
 void syntax(const char *str, ...);
 void warning(const char *str, ...);
 void fatal_error(const char *str, ...);
-void message(const char *file, const char *func, int line, const char *fmt, ...);
+void message(const char*name, const char *file, const char *func, int line, const char *fmt, ...);
 
 int get_num_errors();
 int get_num_warnings();
@@ -24,10 +24,10 @@ void internal_assert(const char *file, const char *func, int line, const char *e
 #  define LOC_ASSERT(fi, fu, li, expr, msg, ...) internal_assert(fi, fu, li, \
                                     #expr, expr, msg, ##__VA_ARGS__)
 
-#  ifdef TRACE
-#    define MSG(fmt, ...) message(__FILENAME__,__func__,__LINE__,fmt,##__VA_ARGS__)
+#  ifdef PTRACE
+#    define PARSER_TRACE(fmt, ...) message("PTRACE",__FILENAME__,__func__,__LINE__,fmt,##__VA_ARGS__)
 #  else
-#    define MSG(fmt, ...)
+#    define PARSER_TRACE(fmt, ...)
 #  endif
 
 #endif

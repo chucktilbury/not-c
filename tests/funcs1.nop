@@ -1,10 +1,7 @@
 
 /*
  * This tests that generic function definition syntax works. The code it
- * ideomatic, if contrived. Since a function declaration cannot be outside
- * of a struct, then the struct is provided as well. Though the actual syntax
- * does not require it, the semantics do require that a function definition
- * is first declared in a struct.
+ * ideomatic, if contrived.
  */
 
 struct func_test1 {
@@ -29,6 +26,8 @@ int func_test1.func1() {
 
 // Entry is the equivalent of "main" in C. It does not accept any parameters.
 // Things like argc and argv are retrieved as global variables.
+//
+// Entry() must be in the root namespace.
 entry {
 
     int nargs = system.argc;

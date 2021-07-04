@@ -17,7 +17,7 @@ typedef struct {
 
 typedef struct {
     const char *name;
-} compound_symbol_t;
+} compound_name_t;
 
 sym_error_t init_symbol_table();
 sym_error_t add_symbol(const char *str, symbol_t * sym);
@@ -25,8 +25,8 @@ sym_error_t del_symbol(const char *str);
 symbol_t *find_symbol(const char *str);
 symbol_t *create_symbol(const char *str);
 
-compound_symbol_t *create_compound(const char *str);
-void add_compound(compound_symbol_t * sym, const char *str);
+compound_name_t *create_compound(const char *str);
+void add_compound(compound_name_t * sym, const char *str);
 
 
 #endif

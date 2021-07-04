@@ -67,6 +67,7 @@ void yyerror(const char *s);
     ((t) == CONST)? "CONST": \
     ((t) == STRUCT)? "STRUCT": \
     ((t) == INIT)? "INIT": \
+    ((t) == USR_TYPE)? "USR_TYPE": \
     ((t) == DEINIT)? "DEINIT": "UNKNOWN")\
 
 

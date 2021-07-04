@@ -1,12 +1,54 @@
 MSG: parser.y: yyparse:69: program begin
-MSG: parser.y: yyparse:189: begin compound symbol main
-MSG: parser.y: yyparse:200: begin func def: INT main
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:202: begin func body
-MSG: parser.y: yyparse:234: 
+MSG: parser.y: yyparse:216: begin entry body def
+MSG: parser.y: yyparse:243: 
 open function context
-MSG: parser.y: yyparse:315: var definition: INT a
+MSG: parser.y: yyparse:324: var definition: INT a
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:324: var definition: INT b
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:324: var definition: INT c
+MSG: parser.y: yyparse:324: var definition: INT i
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:324: var definition: INT n
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:198: begin compound symbol system
+MSG: parser.y: yyparse:202: add to compound symbol print
+MSG: parser.y: yyparse:486: func call to system.print
+MSG: parser.y: yyparse:198: begin compound symbol a
+MSG: parser.y: yyparse:502: func call expression parameter
+MSG: parser.y: yyparse:198: begin compound symbol b
+MSG: parser.y: yyparse:502: func call expression parameter
+MSG: parser.y: yyparse:488: end func call
+MSG: parser.y: yyparse:386: begin comparison expression
+MSG: parser.y: yyparse:198: begin compound symbol i
+MSG: parser.y: yyparse:198: begin compound symbol n
+MSG: parser.y: yyparse:388: end comparison expression
+MSG: parser.y: yyparse:397: begin while loop body
+open local context
+MSG: parser.y: yyparse:198: begin compound symbol c
+MSG: parser.y: yyparse:198: begin compound symbol a
+MSG: parser.y: yyparse:198: begin compound symbol b
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:198: begin compound symbol system
+MSG: parser.y: yyparse:202: add to compound symbol print
+MSG: parser.y: yyparse:486: func call to system.print
+MSG: parser.y: yyparse:198: begin compound symbol c
+MSG: parser.y: yyparse:502: func call expression parameter
+MSG: parser.y: yyparse:488: end func call
+MSG: parser.y: yyparse:198: begin compound symbol a
+MSG: parser.y: yyparse:198: begin compound symbol b
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:198: begin compound symbol b
+MSG: parser.y: yyparse:198: begin compound symbol c
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:198: begin compound symbol i
+MSG: parser.y: yyparse:198: begin compound symbol i
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:399: end while loop body
+close local context
+MSG: parser.y: yyparse:245: 
+close function context
+MSG: parser.y: yyparse:218: end entry body def
 MSG: parser.y: yyparse:71: program end
 
-fibonacci.nop: line 7: at 10: syntax error, unexpected ',', expecting '=' or ';'
-errors: 1 warnings: 0
+errors: 0 warnings: 0

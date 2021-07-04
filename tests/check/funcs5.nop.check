@@ -1,88 +1,88 @@
 MSG: parser.y: yyparse:69: program begin
-MSG: parser.y: yyparse:91: begin struct definition: test_var_assign
-MSG: parser.y: yyparse:120: var declaration: PRIVATE INT var
-MSG: parser.y: yyparse:511: NOTHING type specifier
-MSG: parser.y: yyparse:144: begin func decl: PUBLIC NOTHING var_assign
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:146: end func declaration
+MSG: parser.y: yyparse:100: begin struct definition: test_var_assign
+MSG: parser.y: yyparse:129: var declaration: PRIVATE INT var
+MSG: parser.y: yyparse:520: NOTHING type specifier
+MSG: parser.y: yyparse:153: begin func decl: PUBLIC NOTHING var_assign
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:155: end func declaration
 
-MSG: parser.y: yyparse:93: end of struct definition
+MSG: parser.y: yyparse:102: end of struct definition
 
-MSG: parser.y: yyparse:511: NOTHING type specifier
-MSG: parser.y: yyparse:189: begin compound symbol var_assign
-MSG: parser.y: yyparse:200: begin func def: NOTHING var_assign
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:202: begin func body
-MSG: parser.y: yyparse:234: 
+MSG: parser.y: yyparse:520: NOTHING type specifier
+MSG: parser.y: yyparse:198: begin compound symbol var_assign
+MSG: parser.y: yyparse:209: begin func def: NOTHING var_assign
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:211: begin func body
+MSG: parser.y: yyparse:243: 
 open function context
-MSG: parser.y: yyparse:330: var definition: INT DICT var1
-MSG: parser.y: yyparse:291: empty dict initializer
-MSG: parser.y: yyparse:330: var definition: UINT DICT var2
-MSG: parser.y: yyparse:291: empty dict initializer
-MSG: parser.y: yyparse:330: var definition: BOOL DICT var3
-MSG: parser.y: yyparse:291: empty dict initializer
-MSG: parser.y: yyparse:330: var definition: FLOAT DICT var4
-MSG: parser.y: yyparse:291: empty dict initializer
-MSG: parser.y: yyparse:330: var definition: STRING DICT var5
-MSG: parser.y: yyparse:291: empty dict initializer
-MSG: parser.y: yyparse:333: var definition: some_name DICT var6
-MSG: parser.y: yyparse:291: empty dict initializer
-MSG: parser.y: yyparse:330: var definition: INT DICT var1
-MSG: parser.y: yyparse:272: dict initializer: name1 expression
-MSG: parser.y: yyparse:282: begin dict assignment list
-MSG: parser.y: yyparse:272: dict initializer: name2 expression
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:272: dict initializer: name3 expression
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:294: dict initalizer with data
-MSG: parser.y: yyparse:330: var definition: UINT DICT var2
-MSG: parser.y: yyparse:272: dict initializer: name1 expression
-MSG: parser.y: yyparse:282: begin dict assignment list
-MSG: parser.y: yyparse:272: dict initializer: name2 expression
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:272: dict initializer: name3 expression
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:294: dict initalizer with data
-MSG: parser.y: yyparse:330: var definition: BOOL DICT var3
-MSG: parser.y: yyparse:272: dict initializer: name1 expression
-MSG: parser.y: yyparse:282: begin dict assignment list
-MSG: parser.y: yyparse:272: dict initializer: name2 expression
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:272: dict initializer: name3 expression
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:294: dict initalizer with data
-MSG: parser.y: yyparse:330: var definition: FLOAT DICT var4
-MSG: parser.y: yyparse:272: dict initializer: name1 expression
-MSG: parser.y: yyparse:282: begin dict assignment list
-MSG: parser.y: yyparse:272: dict initializer: name2 expression
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:272: dict initializer: name3 expression
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:294: dict initalizer with data
-MSG: parser.y: yyparse:330: var definition: STRING DICT var5
-MSG: parser.y: yyparse:275: dict initializer: name1 formatted string
-MSG: parser.y: yyparse:282: begin dict assignment list
-MSG: parser.y: yyparse:275: dict initializer: name2 formatted string
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:275: dict initializer: name3 formatted string
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:294: dict initalizer with data
-MSG: parser.y: yyparse:333: var definition: some_name DICT var6
-MSG: parser.y: yyparse:189: begin compound symbol first
-MSG: parser.y: yyparse:193: add to compound symbol first
-MSG: parser.y: yyparse:272: dict initializer: name1 expression
-MSG: parser.y: yyparse:282: begin dict assignment list
-MSG: parser.y: yyparse:189: begin compound symbol second
-MSG: parser.y: yyparse:272: dict initializer: name2 expression
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:189: begin compound symbol third
-MSG: parser.y: yyparse:193: add to compound symbol third
-MSG: parser.y: yyparse:272: dict initializer: name3 expression
-MSG: parser.y: yyparse:285: add dict assignment list
-MSG: parser.y: yyparse:294: dict initalizer with data
-MSG: parser.y: yyparse:236: 
+MSG: parser.y: yyparse:339: var definition: INT DICT var1
+MSG: parser.y: yyparse:300: empty dict initializer
+MSG: parser.y: yyparse:339: var definition: UINT DICT var2
+MSG: parser.y: yyparse:300: empty dict initializer
+MSG: parser.y: yyparse:339: var definition: BOOL DICT var3
+MSG: parser.y: yyparse:300: empty dict initializer
+MSG: parser.y: yyparse:339: var definition: FLOAT DICT var4
+MSG: parser.y: yyparse:300: empty dict initializer
+MSG: parser.y: yyparse:339: var definition: STRING DICT var5
+MSG: parser.y: yyparse:300: empty dict initializer
+MSG: parser.y: yyparse:342: var definition: some_name DICT var6
+MSG: parser.y: yyparse:300: empty dict initializer
+MSG: parser.y: yyparse:339: var definition: INT DICT var1
+MSG: parser.y: yyparse:281: dict initializer: name1 expression
+MSG: parser.y: yyparse:291: begin dict assignment list
+MSG: parser.y: yyparse:281: dict initializer: name2 expression
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:281: dict initializer: name3 expression
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:303: dict initalizer with data
+MSG: parser.y: yyparse:339: var definition: UINT DICT var2
+MSG: parser.y: yyparse:281: dict initializer: name1 expression
+MSG: parser.y: yyparse:291: begin dict assignment list
+MSG: parser.y: yyparse:281: dict initializer: name2 expression
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:281: dict initializer: name3 expression
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:303: dict initalizer with data
+MSG: parser.y: yyparse:339: var definition: BOOL DICT var3
+MSG: parser.y: yyparse:281: dict initializer: name1 expression
+MSG: parser.y: yyparse:291: begin dict assignment list
+MSG: parser.y: yyparse:281: dict initializer: name2 expression
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:281: dict initializer: name3 expression
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:303: dict initalizer with data
+MSG: parser.y: yyparse:339: var definition: FLOAT DICT var4
+MSG: parser.y: yyparse:281: dict initializer: name1 expression
+MSG: parser.y: yyparse:291: begin dict assignment list
+MSG: parser.y: yyparse:281: dict initializer: name2 expression
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:281: dict initializer: name3 expression
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:303: dict initalizer with data
+MSG: parser.y: yyparse:339: var definition: STRING DICT var5
+MSG: parser.y: yyparse:284: dict initializer: name1 formatted string
+MSG: parser.y: yyparse:291: begin dict assignment list
+MSG: parser.y: yyparse:284: dict initializer: name2 formatted string
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:284: dict initializer: name3 formatted string
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:303: dict initalizer with data
+MSG: parser.y: yyparse:342: var definition: some_name DICT var6
+MSG: parser.y: yyparse:198: begin compound symbol first
+MSG: parser.y: yyparse:202: add to compound symbol first
+MSG: parser.y: yyparse:281: dict initializer: name1 expression
+MSG: parser.y: yyparse:291: begin dict assignment list
+MSG: parser.y: yyparse:198: begin compound symbol second
+MSG: parser.y: yyparse:281: dict initializer: name2 expression
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:198: begin compound symbol third
+MSG: parser.y: yyparse:202: add to compound symbol third
+MSG: parser.y: yyparse:281: dict initializer: name3 expression
+MSG: parser.y: yyparse:294: add dict assignment list
+MSG: parser.y: yyparse:303: dict initalizer with data
+MSG: parser.y: yyparse:245: 
 close function context
-MSG: parser.y: yyparse:204: end func body
+MSG: parser.y: yyparse:213: end func body
 
 MSG: parser.y: yyparse:71: program end
 

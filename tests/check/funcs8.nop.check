@@ -1,42 +1,39 @@
 MSG: parser.y: yyparse:69: program begin
-MSG: parser.y: yyparse:189: begin compound symbol func1
-MSG: parser.y: yyparse:200: begin func def: INT func1
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:202: begin func body
-MSG: parser.y: yyparse:234: 
+MSG: parser.y: yyparse:198: begin compound symbol func1
+MSG: parser.y: yyparse:209: begin func def: INT func1
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:211: begin func body
+MSG: parser.y: yyparse:243: 
 open function context
-MSG: parser.y: yyparse:315: var definition: INT var
-MSG: parser.y: yyparse:303: expression assignment item
-MSG: parser.y: yyparse:377: begin comparison expression
-MSG: parser.y: yyparse:189: begin compound symbol var
-MSG: parser.y: yyparse:379: end comparison expression
-MSG: parser.y: yyparse:388: begin while loop body
+MSG: parser.y: yyparse:324: var definition: INT var
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:386: begin comparison expression
+MSG: parser.y: yyparse:198: begin compound symbol var
+MSG: parser.y: yyparse:388: end comparison expression
+MSG: parser.y: yyparse:397: begin while loop body
 open local context
-MSG: parser.y: yyparse:189: begin compound symbol var
-MSG: parser.y: yyparse:189: begin compound symbol var
-MSG: parser.y: yyparse:303: expression assignment item
-MSG: parser.y: yyparse:390: end while loop body
+MSG: parser.y: yyparse:198: begin compound symbol var
+MSG: parser.y: yyparse:198: begin compound symbol var
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:399: end while loop body
 close local context
-MSG: parser.y: yyparse:189: begin compound symbol var
-MSG: parser.y: yyparse:303: expression assignment item
-MSG: parser.y: yyparse:396: begin do loop body
+MSG: parser.y: yyparse:198: begin compound symbol var
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:405: begin do loop body
 open local context
-MSG: parser.y: yyparse:234: 
+MSG: parser.y: yyparse:243: 
 open function context
-MSG: parser.y: yyparse:189: begin compound symbol var
-MSG: parser.y: yyparse:189: begin compound symbol var
-MSG: parser.y: yyparse:303: expression assignment item
-MSG: parser.y: yyparse:236: 
+MSG: parser.y: yyparse:198: begin compound symbol var
+MSG: parser.y: yyparse:198: begin compound symbol var
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:245: 
 close function context
-MSG: parser.y: yyparse:398: end do loop body
+MSG: parser.y: yyparse:407: end do loop body
 close local context
-MSG: parser.y: yyparse:377: begin comparison expression
-MSG: parser.y: yyparse:189: begin compound symbol var
-MSG: parser.y: yyparse:379: end comparison expression
-MSG: parser.y: yyparse:236: 
-close function context
-MSG: parser.y: yyparse:204: end func body
-
+MSG: parser.y: yyparse:386: begin comparison expression
+MSG: parser.y: yyparse:198: begin compound symbol var
+MSG: parser.y: yyparse:388: end comparison expression
+Syntax Error: funcs8.nop: line 18: at 2: syntax error, unexpected '}', expecting ';'
 MSG: parser.y: yyparse:71: program end
 
-errors: 0 warnings: 0
+errors: 1 warnings: 0

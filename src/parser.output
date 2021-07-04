@@ -1,0 +1,4770 @@
+Terminals unused in grammar
+
+   USR_TYPE
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 $@1: %empty
+
+    2 program: $@1 all_module
+
+    3 all_module: module_list
+
+    4 module_list: module_element
+    5            | module_list module_element
+
+    6 module_element: struct_definition
+    7               | func_definition
+    8               | namespace_definition
+    9               | ';'
+
+   10 $@2: %empty
+
+   11 namespace_definition: NAMESPACE SYMBOL $@2 '{' module_list '}'
+
+   12 $@3: %empty
+
+   13 struct_definition: STRUCT SYMBOL $@3 '{' struct_list '}'
+
+   14 struct_list: struct_element
+   15            | struct_list struct_element
+
+   16 struct_element: var_declaration
+   17               | func_declaration
+   18               | ';'
+
+   19 scope_specifier: %empty
+   20                | PUBLIC
+   21                | PRIVATE
+
+   22 var_declaration: scope_specifier CONST compound_type SYMBOL
+   23                | scope_specifier compound_type SYMBOL
+   24                | scope_specifier compound_type LIST SYMBOL
+   25                | scope_specifier compound_type DICT SYMBOL
+
+   26 init_preamble: compound_name '.'
+
+   27 $@4: %empty
+
+   28 func_declaration: scope_specifier compound_type SYMBOL $@4 '(' func_def_parms ')'
+
+   29 $@5: %empty
+
+   30 func_declaration: scope_specifier compound_type LIST SYMBOL $@5 '(' func_def_parms ')'
+
+   31 $@6: %empty
+
+   32 func_declaration: scope_specifier compound_type DICT SYMBOL $@6 '(' func_def_parms ')'
+
+   33 $@7: %empty
+
+   34 func_declaration: INIT $@7 '(' func_def_parms ')'
+   35                 | DEINIT '(' ')'
+   36                 | DEINIT
+   37                 | error
+
+   38 compound_name: SYMBOL
+   39              | compound_name '.' SYMBOL
+
+   40 $@8: %empty
+
+   41 $@9: %empty
+
+   42 func_definition: compound_type compound_name $@8 '(' func_def_parms ')' $@9 func_body
+
+   43 $@10: %empty
+
+   44 func_definition: ENTRY $@10 func_body
+
+   45 $@11: %empty
+
+   46 $@12: %empty
+
+   47 func_definition: init_preamble INIT $@11 '(' func_def_parms ')' $@12 func_body
+
+   48 $@13: %empty
+
+   49 func_definition: init_preamble DEINIT $@13 func_body
+
+   50 $@14: %empty
+
+   51 $@15: %empty
+
+   52 func_definition: init_preamble DEINIT $@14 '(' ')' $@15 func_body
+   53                | error
+
+   54 func_def_parms_items: %empty
+   55                     | compound_type SYMBOL
+   56                     | compound_type LIST SYMBOL
+   57                     | compound_type DICT SYMBOL
+
+   58 func_def_parms: func_def_parms_items
+   59               | func_def_parms ',' func_def_parms_items
+
+   60 $@16: %empty
+
+   61 func_body: '{' $@16 func_body_list '}'
+   62          | '{' '}'
+
+   63 func_body_list: func_body_element
+   64               | func_body_list func_body_element
+
+   65 list_initializer: '[' ']'
+   66                 | '[' list_initializer_list ']'
+   67                 | compound_name
+
+   68 list_initializer_list: assignment_item
+   69                      | list_initializer_list ',' assignment_item
+
+   70 dict_initializer_item: SYMBOL '=' expression
+   71                      | SYMBOL '=' formatted_string
+
+   72 dict_initializer_list: dict_initializer_item
+   73                      | dict_initializer_list ',' dict_initializer_item
+
+   74 dict_initializer: '[' ']'
+   75                 | '[' dict_initializer_list ']'
+   76                 | compound_name
+
+   77 assignment_item: expression
+   78                | formatted_string
+
+   79 var_definition: compound_type SYMBOL
+
+   80 list_definition: compound_type LIST SYMBOL
+
+   81 dict_definition: compound_type DICT SYMBOL
+
+   82 func_body_element: var_definition
+   83                  | var_definition '=' assignment_item
+   84                  | compound_name '=' assignment_item
+   85                  | list_definition '=' list_initializer
+   86                  | list_definition
+   87                  | dict_definition '=' dict_initializer
+   88                  | dict_definition
+   89                  | list_reference '=' assignment_item
+   90                  | dict_reference '=' assignment_item
+   91                  | func_call
+   92                  | while_statement
+   93                  | do_statement
+   94                  | if_statement
+   95                  | switch_statement
+   96                  | func_body
+   97                  | RETURN expression
+   98                  | EXIT expression
+   99                  | BREAK
+  100                  | CONTINUE
+  101                  | ';'
+
+  102 $@17: %empty
+
+  103 comparison_expr: '(' $@17 expression ')'
+  104                | '(' ')'
+
+  105 $@18: %empty
+
+  106 while_statement: WHILE comparison_expr $@18 func_body
+
+  107 $@19: %empty
+
+  108 $@20: %empty
+
+  109 do_statement: DO $@19 func_body $@20 WHILE comparison_expr
+
+  110 $@21: %empty
+
+  111 if_introduction: IF $@21 comparison_expr
+
+  112 if_statement: if_introduction func_body
+
+  113 $@22: %empty
+
+  114 if_statement: if_introduction func_body $@22 else_clause_list
+
+  115 $@23: %empty
+
+  116 $@24: %empty
+
+  117 else_clause: ELSE $@23 comparison_expr $@24 func_body
+
+  118 $@25: %empty
+
+  119 else_clause: ELSE $@25 func_body
+
+  120 else_clause_list: else_clause
+  121                 | else_clause_list else_clause
+
+  122 $@26: %empty
+
+  123 switch_statement: SWITCH $@26 comparison_expr '{' case_clause '}'
+
+  124 $@27: %empty
+
+  125 default_clause: DEFAULT $@27 func_body
+
+  126 $@28: %empty
+
+  127 case_base: CASE '(' constant ')' $@28 func_body
+
+  128 case_clause: case_clause_list
+  129            | case_clause_list default_clause
+
+  130 case_clause_list: case_base
+  131                 | case_clause_list case_base
+
+  132 $@29: %empty
+
+  133 func_call: compound_name $@29 '(' fcall_list ')'
+
+  134 fcall_list: %empty
+  135           | fcall_list_element
+  136           | fcall_list ',' fcall_list_element
+
+  137 fcall_list_element: expression
+  138                   | formatted_string
+
+  139 formatted_string: STRCONST
+  140                 | STRCONST '(' expression_list ')'
+
+  141 compound_type: type_specifier
+  142              | compound_name
+
+  143 type_specifier: STRING
+  144               | FLOAT
+  145               | INT
+  146               | UINT
+  147               | BOOL
+  148               | NOTHING
+
+  149 list_reference: compound_name '[' expression ']'
+
+  150 dict_reference: compound_name '[' formatted_string ']'
+
+  151 constant: FPCONST
+  152         | INTCONST
+  153         | UINTCONST
+  154         | BOOLCONST
+  155         | NOTHING
+
+  156 expression_factor: constant
+  157                  | compound_name
+  158                  | list_reference
+  159                  | dict_reference
+  160                  | func_call
+
+  161 expression: expression_factor
+  162           | expression '+' expression
+  163           | expression '-' expression
+  164           | expression '*' expression
+  165           | expression '/' expression
+  166           | expression '%' expression
+  167           | expression EQ expression
+  168           | expression NEQ expression
+  169           | expression LT expression
+  170           | expression GT expression
+  171           | expression LTE expression
+  172           | expression GTE expression
+  173           | expression AND expression
+  174           | expression OR expression
+  175           | '-' expression
+  176           | NOT expression
+  177           | type_specifier ':' SYMBOL
+  178           | SYMBOL ADD_ASSIGN expression
+  179           | SYMBOL SUB_ASSIGN expression
+  180           | SYMBOL MUL_ASSIGN expression
+  181           | SYMBOL DIV_ASSIGN expression
+  182           | SYMBOL MOD_ASSIGN expression
+  183           | '(' expression ')'
+
+  184 expression_list: expression
+  185                | expression_list ',' expression
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'%' (37) 166
+'(' (40) 28 30 32 34 35 42 47 52 103 104 127 133 140 183
+')' (41) 28 30 32 34 35 42 47 52 103 104 127 133 140 183
+'*' (42) 164
+'+' (43) 162
+',' (44) 59 69 73 136 185
+'-' (45) 163 175
+'.' (46) 26 39
+'/' (47) 165
+':' (58) 177
+';' (59) 9 18 101
+'=' (61) 70 71 83 84 85 87 89 90
+'[' (91) 65 66 74 75 149 150
+']' (93) 65 66 74 75 149 150
+'{' (123) 11 13 61 62 123
+'}' (125) 11 13 61 62 123
+error (256) 37 53
+FPCONST <constant> (258) 151
+INTCONST <constant> (259) 152
+UINTCONST <constant> (260) 153
+STRCONST <constant> (261) 139 140
+BOOLCONST <constant> (262) 154
+SYMBOL <symbol> (263) 11 13 22 23 24 25 28 30 32 38 39 55 56 57 70
+    71 79 80 81 177 178 179 180 181 182
+DICT <type> (264) 25 32 57 81
+LIST <type> (265) 24 30 56 80
+BOOL <type> (266) 147
+STRING <type> (267) 143
+FLOAT <type> (268) 144
+INT <type> (269) 145
+UINT <type> (270) 146
+NOTHING <type> (271) 148 155
+SWITCH (272) 123
+CASE (273) 127
+DEFAULT (274) 125
+RETURN (275) 97
+PUBLIC (276) 20
+PRIVATE (277) 21
+IF (278) 111
+ELSE (279) 117 119
+WHILE (280) 106 109
+DO (281) 109
+BREAK (282) 99
+CONTINUE (283) 100
+NAMESPACE (284) 11
+AND (285) 173
+OR (286) 174
+NOT (287) 176
+EQ (288) 167
+NEQ (289) 168
+LTE (290) 171
+GTE (291) 172
+LT (292) 169
+GT (293) 170
+ENTRY (294) 44
+EXIT (295) 98
+CONST (296) 22
+STRUCT (297) 13
+INIT (298) 34 47
+DEINIT (299) 35 36 49 52
+ADD_ASSIGN (300) 178
+SUB_ASSIGN (301) 179
+MUL_ASSIGN (302) 180
+DIV_ASSIGN (303) 181
+MOD_ASSIGN (304) 182
+USR_TYPE (305)
+NEG (306)
+
+
+Nonterminals, with rules where they appear
+
+$accept (68)
+    on left: 0
+program (69)
+    on left: 2, on right: 0
+$@1 (70)
+    on left: 1, on right: 2
+all_module (71)
+    on left: 3, on right: 2
+module_list (72)
+    on left: 4 5, on right: 3 5 11
+module_element (73)
+    on left: 6 7 8 9, on right: 4 5
+namespace_definition (74)
+    on left: 11, on right: 8
+$@2 (75)
+    on left: 10, on right: 11
+struct_definition (76)
+    on left: 13, on right: 6
+$@3 (77)
+    on left: 12, on right: 13
+struct_list (78)
+    on left: 14 15, on right: 13 15
+struct_element (79)
+    on left: 16 17 18, on right: 14 15
+scope_specifier <scope> (80)
+    on left: 19 20 21, on right: 22 23 24 25 28 30 32
+var_declaration (81)
+    on left: 22 23 24 25, on right: 16
+init_preamble <compound> (82)
+    on left: 26, on right: 47 49 52
+func_declaration (83)
+    on left: 28 30 32 34 35 36 37, on right: 17
+$@4 (84)
+    on left: 27, on right: 28
+$@5 (85)
+    on left: 29, on right: 30
+$@6 (86)
+    on left: 31, on right: 32
+$@7 (87)
+    on left: 33, on right: 34
+compound_name <compound> (88)
+    on left: 38 39, on right: 26 39 42 67 76 84 133 142 149 150 157
+func_definition (89)
+    on left: 42 44 47 49 52 53, on right: 7
+$@8 (90)
+    on left: 40, on right: 42
+$@9 (91)
+    on left: 41, on right: 42
+$@10 (92)
+    on left: 43, on right: 44
+$@11 (93)
+    on left: 45, on right: 47
+$@12 (94)
+    on left: 46, on right: 47
+$@13 (95)
+    on left: 48, on right: 49
+$@14 (96)
+    on left: 50, on right: 52
+$@15 (97)
+    on left: 51, on right: 52
+func_def_parms_items (98)
+    on left: 54 55 56 57, on right: 58 59
+func_def_parms (99)
+    on left: 58 59, on right: 28 30 32 34 42 47 59
+func_body (100)
+    on left: 61 62, on right: 42 44 47 49 52 96 106 109 112 114 117
+    119 125 127
+$@16 (101)
+    on left: 60, on right: 61
+func_body_list (102)
+    on left: 63 64, on right: 61 64
+list_initializer (103)
+    on left: 65 66 67, on right: 85
+list_initializer_list (104)
+    on left: 68 69, on right: 66 69
+dict_initializer_item (105)
+    on left: 70 71, on right: 72 73
+dict_initializer_list (106)
+    on left: 72 73, on right: 73 75
+dict_initializer (107)
+    on left: 74 75 76, on right: 87
+assignment_item (108)
+    on left: 77 78, on right: 68 69 83 84 89 90
+var_definition (109)
+    on left: 79, on right: 82 83
+list_definition (110)
+    on left: 80, on right: 85 86
+dict_definition (111)
+    on left: 81, on right: 87 88
+func_body_element (112)
+    on left: 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99
+    100 101, on right: 63 64
+comparison_expr (113)
+    on left: 103 104, on right: 106 109 111 117 123
+$@17 (114)
+    on left: 102, on right: 103
+while_statement (115)
+    on left: 106, on right: 92
+$@18 (116)
+    on left: 105, on right: 106
+do_statement (117)
+    on left: 109, on right: 93
+$@19 (118)
+    on left: 107, on right: 109
+$@20 (119)
+    on left: 108, on right: 109
+if_introduction (120)
+    on left: 111, on right: 112 114
+$@21 (121)
+    on left: 110, on right: 111
+if_statement (122)
+    on left: 112 114, on right: 94
+$@22 (123)
+    on left: 113, on right: 114
+else_clause (124)
+    on left: 117 119, on right: 120 121
+$@23 (125)
+    on left: 115, on right: 117
+$@24 (126)
+    on left: 116, on right: 117
+$@25 (127)
+    on left: 118, on right: 119
+else_clause_list (128)
+    on left: 120 121, on right: 114 121
+switch_statement (129)
+    on left: 123, on right: 95
+$@26 (130)
+    on left: 122, on right: 123
+default_clause (131)
+    on left: 125, on right: 129
+$@27 (132)
+    on left: 124, on right: 125
+case_base (133)
+    on left: 127, on right: 130 131
+$@28 (134)
+    on left: 126, on right: 127
+case_clause (135)
+    on left: 128 129, on right: 123
+case_clause_list (136)
+    on left: 130 131, on right: 128 129 131
+func_call (137)
+    on left: 133, on right: 91 160
+$@29 (138)
+    on left: 132, on right: 133
+fcall_list (139)
+    on left: 134 135 136, on right: 133 136
+fcall_list_element (140)
+    on left: 137 138, on right: 135 136
+formatted_string (141)
+    on left: 139 140, on right: 71 78 138 150
+compound_type <type> (142)
+    on left: 141 142, on right: 22 23 24 25 28 30 32 42 55 56 57 79
+    80 81
+type_specifier <type> (143)
+    on left: 143 144 145 146 147 148, on right: 141 177
+list_reference (144)
+    on left: 149, on right: 89 158
+dict_reference (145)
+    on left: 150, on right: 90 159
+constant <constant> (146)
+    on left: 151 152 153 154 155, on right: 127 156
+expression_factor (147)
+    on left: 156 157 158 159 160, on right: 161
+expression <constant> (148)
+    on left: 161 162 163 164 165 166 167 168 169 170 171 172 173 174
+    175 176 177 178 179 180 181 182 183, on right: 70 77 97 98 103
+    137 149 162 163 164 165 166 167 168 169 170 171 172 173 174 175
+    176 178 179 180 181 182 183 184 185
+expression_list (149)
+    on left: 184 185, on right: 140 185
+
+
+State 0
+
+    0 $accept: . program $end
+
+    $default  reduce using rule 1 ($@1)
+
+    program  go to state 1
+    $@1      go to state 2
+
+
+State 1
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 3
+
+
+State 2
+
+    2 program: $@1 . all_module
+
+    error      shift, and go to state 4
+    SYMBOL     shift, and go to state 5
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 11
+    NAMESPACE  shift, and go to state 12
+    ENTRY      shift, and go to state 13
+    STRUCT     shift, and go to state 14
+    ';'        shift, and go to state 15
+
+    all_module            go to state 16
+    module_list           go to state 17
+    module_element        go to state 18
+    namespace_definition  go to state 19
+    struct_definition     go to state 20
+    init_preamble         go to state 21
+    compound_name         go to state 22
+    func_definition       go to state 23
+    compound_type         go to state 24
+    type_specifier        go to state 25
+
+
+State 3
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 4
+
+   53 func_definition: error .
+
+    $default  reduce using rule 53 (func_definition)
+
+
+State 5
+
+   38 compound_name: SYMBOL .
+
+    $default  reduce using rule 38 (compound_name)
+
+
+State 6
+
+  147 type_specifier: BOOL .
+
+    $default  reduce using rule 147 (type_specifier)
+
+
+State 7
+
+  143 type_specifier: STRING .
+
+    $default  reduce using rule 143 (type_specifier)
+
+
+State 8
+
+  144 type_specifier: FLOAT .
+
+    $default  reduce using rule 144 (type_specifier)
+
+
+State 9
+
+  145 type_specifier: INT .
+
+    $default  reduce using rule 145 (type_specifier)
+
+
+State 10
+
+  146 type_specifier: UINT .
+
+    $default  reduce using rule 146 (type_specifier)
+
+
+State 11
+
+  148 type_specifier: NOTHING .
+
+    $default  reduce using rule 148 (type_specifier)
+
+
+State 12
+
+   11 namespace_definition: NAMESPACE . SYMBOL $@2 '{' module_list '}'
+
+    SYMBOL  shift, and go to state 26
+
+
+State 13
+
+   44 func_definition: ENTRY . $@10 func_body
+
+    $default  reduce using rule 43 ($@10)
+
+    $@10  go to state 27
+
+
+State 14
+
+   13 struct_definition: STRUCT . SYMBOL $@3 '{' struct_list '}'
+
+    SYMBOL  shift, and go to state 28
+
+
+State 15
+
+    9 module_element: ';' .
+
+    $default  reduce using rule 9 (module_element)
+
+
+State 16
+
+    2 program: $@1 all_module .
+
+    $default  reduce using rule 2 (program)
+
+
+State 17
+
+    3 all_module: module_list .  [$end]
+    5 module_list: module_list . module_element
+
+    error      shift, and go to state 4
+    SYMBOL     shift, and go to state 5
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 11
+    NAMESPACE  shift, and go to state 12
+    ENTRY      shift, and go to state 13
+    STRUCT     shift, and go to state 14
+    ';'        shift, and go to state 15
+
+    $end  reduce using rule 3 (all_module)
+
+    module_element        go to state 29
+    namespace_definition  go to state 19
+    struct_definition     go to state 20
+    init_preamble         go to state 21
+    compound_name         go to state 22
+    func_definition       go to state 23
+    compound_type         go to state 24
+    type_specifier        go to state 25
+
+
+State 18
+
+    4 module_list: module_element .
+
+    $default  reduce using rule 4 (module_list)
+
+
+State 19
+
+    8 module_element: namespace_definition .
+
+    $default  reduce using rule 8 (module_element)
+
+
+State 20
+
+    6 module_element: struct_definition .
+
+    $default  reduce using rule 6 (module_element)
+
+
+State 21
+
+   47 func_definition: init_preamble . INIT $@11 '(' func_def_parms ')' $@12 func_body
+   49                | init_preamble . DEINIT $@13 func_body
+   52                | init_preamble . DEINIT $@14 '(' ')' $@15 func_body
+
+    INIT    shift, and go to state 30
+    DEINIT  shift, and go to state 31
+
+
+State 22
+
+   26 init_preamble: compound_name . '.'
+   39 compound_name: compound_name . '.' SYMBOL
+  142 compound_type: compound_name .  [SYMBOL]
+
+    '.'  shift, and go to state 32
+
+    $default  reduce using rule 142 (compound_type)
+
+
+State 23
+
+    7 module_element: func_definition .
+
+    $default  reduce using rule 7 (module_element)
+
+
+State 24
+
+   42 func_definition: compound_type . compound_name $@8 '(' func_def_parms ')' $@9 func_body
+
+    SYMBOL  shift, and go to state 5
+
+    compound_name  go to state 33
+
+
+State 25
+
+  141 compound_type: type_specifier .
+
+    $default  reduce using rule 141 (compound_type)
+
+
+State 26
+
+   11 namespace_definition: NAMESPACE SYMBOL . $@2 '{' module_list '}'
+
+    $default  reduce using rule 10 ($@2)
+
+    $@2  go to state 34
+
+
+State 27
+
+   44 func_definition: ENTRY $@10 . func_body
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 36
+
+
+State 28
+
+   13 struct_definition: STRUCT SYMBOL . $@3 '{' struct_list '}'
+
+    $default  reduce using rule 12 ($@3)
+
+    $@3  go to state 37
+
+
+State 29
+
+    5 module_list: module_list module_element .
+
+    $default  reduce using rule 5 (module_list)
+
+
+State 30
+
+   47 func_definition: init_preamble INIT . $@11 '(' func_def_parms ')' $@12 func_body
+
+    $default  reduce using rule 45 ($@11)
+
+    $@11  go to state 38
+
+
+State 31
+
+   49 func_definition: init_preamble DEINIT . $@13 func_body
+   52                | init_preamble DEINIT . $@14 '(' ')' $@15 func_body
+
+    '('       reduce using rule 50 ($@14)
+    $default  reduce using rule 48 ($@13)
+
+    $@13  go to state 39
+    $@14  go to state 40
+
+
+State 32
+
+   26 init_preamble: compound_name '.' .  [INIT, DEINIT]
+   39 compound_name: compound_name '.' . SYMBOL
+
+    SYMBOL  shift, and go to state 41
+
+    $default  reduce using rule 26 (init_preamble)
+
+
+State 33
+
+   39 compound_name: compound_name . '.' SYMBOL
+   42 func_definition: compound_type compound_name . $@8 '(' func_def_parms ')' $@9 func_body
+
+    '.'  shift, and go to state 42
+
+    $default  reduce using rule 40 ($@8)
+
+    $@8  go to state 43
+
+
+State 34
+
+   11 namespace_definition: NAMESPACE SYMBOL $@2 . '{' module_list '}'
+
+    '{'  shift, and go to state 44
+
+
+State 35
+
+   61 func_body: '{' . $@16 func_body_list '}'
+   62          | '{' . '}'
+
+    '}'  shift, and go to state 45
+
+    $default  reduce using rule 60 ($@16)
+
+    $@16  go to state 46
+
+
+State 36
+
+   44 func_definition: ENTRY $@10 func_body .
+
+    $default  reduce using rule 44 (func_definition)
+
+
+State 37
+
+   13 struct_definition: STRUCT SYMBOL $@3 . '{' struct_list '}'
+
+    '{'  shift, and go to state 47
+
+
+State 38
+
+   47 func_definition: init_preamble INIT $@11 . '(' func_def_parms ')' $@12 func_body
+
+    '('  shift, and go to state 48
+
+
+State 39
+
+   49 func_definition: init_preamble DEINIT $@13 . func_body
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 49
+
+
+State 40
+
+   52 func_definition: init_preamble DEINIT $@14 . '(' ')' $@15 func_body
+
+    '('  shift, and go to state 50
+
+
+State 41
+
+   39 compound_name: compound_name '.' SYMBOL .
+
+    $default  reduce using rule 39 (compound_name)
+
+
+State 42
+
+   39 compound_name: compound_name '.' . SYMBOL
+
+    SYMBOL  shift, and go to state 41
+
+
+State 43
+
+   42 func_definition: compound_type compound_name $@8 . '(' func_def_parms ')' $@9 func_body
+
+    '('  shift, and go to state 51
+
+
+State 44
+
+   11 namespace_definition: NAMESPACE SYMBOL $@2 '{' . module_list '}'
+
+    error      shift, and go to state 4
+    SYMBOL     shift, and go to state 5
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 11
+    NAMESPACE  shift, and go to state 12
+    ENTRY      shift, and go to state 13
+    STRUCT     shift, and go to state 14
+    ';'        shift, and go to state 15
+
+    module_list           go to state 52
+    module_element        go to state 18
+    namespace_definition  go to state 19
+    struct_definition     go to state 20
+    init_preamble         go to state 21
+    compound_name         go to state 22
+    func_definition       go to state 23
+    compound_type         go to state 24
+    type_specifier        go to state 25
+
+
+State 45
+
+   62 func_body: '{' '}' .
+
+    $default  reduce using rule 62 (func_body)
+
+
+State 46
+
+   61 func_body: '{' $@16 . func_body_list '}'
+
+    SYMBOL    shift, and go to state 5
+    BOOL      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FLOAT     shift, and go to state 8
+    INT       shift, and go to state 9
+    UINT      shift, and go to state 10
+    NOTHING   shift, and go to state 11
+    SWITCH    shift, and go to state 53
+    RETURN    shift, and go to state 54
+    IF        shift, and go to state 55
+    WHILE     shift, and go to state 56
+    DO        shift, and go to state 57
+    BREAK     shift, and go to state 58
+    CONTINUE  shift, and go to state 59
+    EXIT      shift, and go to state 60
+    ';'       shift, and go to state 61
+    '{'       shift, and go to state 35
+
+    compound_name      go to state 62
+    func_body          go to state 63
+    func_body_list     go to state 64
+    var_definition     go to state 65
+    list_definition    go to state 66
+    dict_definition    go to state 67
+    func_body_element  go to state 68
+    while_statement    go to state 69
+    do_statement       go to state 70
+    if_introduction    go to state 71
+    if_statement       go to state 72
+    switch_statement   go to state 73
+    func_call          go to state 74
+    compound_type      go to state 75
+    type_specifier     go to state 25
+    list_reference     go to state 76
+    dict_reference     go to state 77
+
+
+State 47
+
+   13 struct_definition: STRUCT SYMBOL $@3 '{' . struct_list '}'
+
+    error    shift, and go to state 78
+    PUBLIC   shift, and go to state 79
+    PRIVATE  shift, and go to state 80
+    INIT     shift, and go to state 81
+    DEINIT   shift, and go to state 82
+    ';'      shift, and go to state 83
+
+    SYMBOL   reduce using rule 19 (scope_specifier)
+    BOOL     reduce using rule 19 (scope_specifier)
+    STRING   reduce using rule 19 (scope_specifier)
+    FLOAT    reduce using rule 19 (scope_specifier)
+    INT      reduce using rule 19 (scope_specifier)
+    UINT     reduce using rule 19 (scope_specifier)
+    NOTHING  reduce using rule 19 (scope_specifier)
+    CONST    reduce using rule 19 (scope_specifier)
+
+    struct_list       go to state 84
+    struct_element    go to state 85
+    scope_specifier   go to state 86
+    var_declaration   go to state 87
+    func_declaration  go to state 88
+
+
+State 48
+
+   47 func_definition: init_preamble INIT $@11 '(' . func_def_parms ')' $@12 func_body
+
+    SYMBOL   shift, and go to state 5
+    BOOL     shift, and go to state 6
+    STRING   shift, and go to state 7
+    FLOAT    shift, and go to state 8
+    INT      shift, and go to state 9
+    UINT     shift, and go to state 10
+    NOTHING  shift, and go to state 11
+
+    $default  reduce using rule 54 (func_def_parms_items)
+
+    compound_name         go to state 89
+    func_def_parms_items  go to state 90
+    func_def_parms        go to state 91
+    compound_type         go to state 92
+    type_specifier        go to state 25
+
+
+State 49
+
+   49 func_definition: init_preamble DEINIT $@13 func_body .
+
+    $default  reduce using rule 49 (func_definition)
+
+
+State 50
+
+   52 func_definition: init_preamble DEINIT $@14 '(' . ')' $@15 func_body
+
+    ')'  shift, and go to state 93
+
+
+State 51
+
+   42 func_definition: compound_type compound_name $@8 '(' . func_def_parms ')' $@9 func_body
+
+    SYMBOL   shift, and go to state 5
+    BOOL     shift, and go to state 6
+    STRING   shift, and go to state 7
+    FLOAT    shift, and go to state 8
+    INT      shift, and go to state 9
+    UINT     shift, and go to state 10
+    NOTHING  shift, and go to state 11
+
+    $default  reduce using rule 54 (func_def_parms_items)
+
+    compound_name         go to state 89
+    func_def_parms_items  go to state 90
+    func_def_parms        go to state 94
+    compound_type         go to state 92
+    type_specifier        go to state 25
+
+
+State 52
+
+    5 module_list: module_list . module_element
+   11 namespace_definition: NAMESPACE SYMBOL $@2 '{' module_list . '}'
+
+    error      shift, and go to state 4
+    SYMBOL     shift, and go to state 5
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 11
+    NAMESPACE  shift, and go to state 12
+    ENTRY      shift, and go to state 13
+    STRUCT     shift, and go to state 14
+    ';'        shift, and go to state 15
+    '}'        shift, and go to state 95
+
+    module_element        go to state 29
+    namespace_definition  go to state 19
+    struct_definition     go to state 20
+    init_preamble         go to state 21
+    compound_name         go to state 22
+    func_definition       go to state 23
+    compound_type         go to state 24
+    type_specifier        go to state 25
+
+
+State 53
+
+  123 switch_statement: SWITCH . $@26 comparison_expr '{' case_clause '}'
+
+    $default  reduce using rule 122 ($@26)
+
+    $@26  go to state 96
+
+
+State 54
+
+   97 func_body_element: RETURN . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 113
+
+
+State 55
+
+  111 if_introduction: IF . $@21 comparison_expr
+
+    $default  reduce using rule 110 ($@21)
+
+    $@21  go to state 114
+
+
+State 56
+
+  106 while_statement: WHILE . comparison_expr $@18 func_body
+
+    '('  shift, and go to state 115
+
+    comparison_expr  go to state 116
+
+
+State 57
+
+  109 do_statement: DO . $@19 func_body $@20 WHILE comparison_expr
+
+    $default  reduce using rule 107 ($@19)
+
+    $@19  go to state 117
+
+
+State 58
+
+   99 func_body_element: BREAK .
+
+    $default  reduce using rule 99 (func_body_element)
+
+
+State 59
+
+  100 func_body_element: CONTINUE .
+
+    $default  reduce using rule 100 (func_body_element)
+
+
+State 60
+
+   98 func_body_element: EXIT . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 118
+
+
+State 61
+
+  101 func_body_element: ';' .
+
+    $default  reduce using rule 101 (func_body_element)
+
+
+State 62
+
+   39 compound_name: compound_name . '.' SYMBOL
+   84 func_body_element: compound_name . '=' assignment_item
+  133 func_call: compound_name . $@29 '(' fcall_list ')'
+  142 compound_type: compound_name .  [SYMBOL, DICT, LIST]
+  149 list_reference: compound_name . '[' expression ']'
+  150 dict_reference: compound_name . '[' formatted_string ']'
+
+    '='  shift, and go to state 119
+    '.'  shift, and go to state 42
+    '['  shift, and go to state 120
+
+    '('       reduce using rule 132 ($@29)
+    $default  reduce using rule 142 (compound_type)
+
+    $@29  go to state 121
+
+
+State 63
+
+   96 func_body_element: func_body .
+
+    $default  reduce using rule 96 (func_body_element)
+
+
+State 64
+
+   61 func_body: '{' $@16 func_body_list . '}'
+   64 func_body_list: func_body_list . func_body_element
+
+    SYMBOL    shift, and go to state 5
+    BOOL      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FLOAT     shift, and go to state 8
+    INT       shift, and go to state 9
+    UINT      shift, and go to state 10
+    NOTHING   shift, and go to state 11
+    SWITCH    shift, and go to state 53
+    RETURN    shift, and go to state 54
+    IF        shift, and go to state 55
+    WHILE     shift, and go to state 56
+    DO        shift, and go to state 57
+    BREAK     shift, and go to state 58
+    CONTINUE  shift, and go to state 59
+    EXIT      shift, and go to state 60
+    ';'       shift, and go to state 61
+    '{'       shift, and go to state 35
+    '}'       shift, and go to state 122
+
+    compound_name      go to state 62
+    func_body          go to state 63
+    var_definition     go to state 65
+    list_definition    go to state 66
+    dict_definition    go to state 67
+    func_body_element  go to state 123
+    while_statement    go to state 69
+    do_statement       go to state 70
+    if_introduction    go to state 71
+    if_statement       go to state 72
+    switch_statement   go to state 73
+    func_call          go to state 74
+    compound_type      go to state 75
+    type_specifier     go to state 25
+    list_reference     go to state 76
+    dict_reference     go to state 77
+
+
+State 65
+
+   82 func_body_element: var_definition .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}']
+   83                  | var_definition . '=' assignment_item
+
+    '='  shift, and go to state 124
+
+    $default  reduce using rule 82 (func_body_element)
+
+
+State 66
+
+   85 func_body_element: list_definition . '=' list_initializer
+   86                  | list_definition .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}']
+
+    '='  shift, and go to state 125
+
+    $default  reduce using rule 86 (func_body_element)
+
+
+State 67
+
+   87 func_body_element: dict_definition . '=' dict_initializer
+   88                  | dict_definition .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}']
+
+    '='  shift, and go to state 126
+
+    $default  reduce using rule 88 (func_body_element)
+
+
+State 68
+
+   63 func_body_list: func_body_element .
+
+    $default  reduce using rule 63 (func_body_list)
+
+
+State 69
+
+   92 func_body_element: while_statement .
+
+    $default  reduce using rule 92 (func_body_element)
+
+
+State 70
+
+   93 func_body_element: do_statement .
+
+    $default  reduce using rule 93 (func_body_element)
+
+
+State 71
+
+  112 if_statement: if_introduction . func_body
+  114             | if_introduction . func_body $@22 else_clause_list
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 127
+
+
+State 72
+
+   94 func_body_element: if_statement .
+
+    $default  reduce using rule 94 (func_body_element)
+
+
+State 73
+
+   95 func_body_element: switch_statement .
+
+    $default  reduce using rule 95 (func_body_element)
+
+
+State 74
+
+   91 func_body_element: func_call .
+
+    $default  reduce using rule 91 (func_body_element)
+
+
+State 75
+
+   79 var_definition: compound_type . SYMBOL
+   80 list_definition: compound_type . LIST SYMBOL
+   81 dict_definition: compound_type . DICT SYMBOL
+
+    SYMBOL  shift, and go to state 128
+    DICT    shift, and go to state 129
+    LIST    shift, and go to state 130
+
+
+State 76
+
+   89 func_body_element: list_reference . '=' assignment_item
+
+    '='  shift, and go to state 131
+
+
+State 77
+
+   90 func_body_element: dict_reference . '=' assignment_item
+
+    '='  shift, and go to state 132
+
+
+State 78
+
+   37 func_declaration: error .
+
+    $default  reduce using rule 37 (func_declaration)
+
+
+State 79
+
+   20 scope_specifier: PUBLIC .
+
+    $default  reduce using rule 20 (scope_specifier)
+
+
+State 80
+
+   21 scope_specifier: PRIVATE .
+
+    $default  reduce using rule 21 (scope_specifier)
+
+
+State 81
+
+   34 func_declaration: INIT . $@7 '(' func_def_parms ')'
+
+    $default  reduce using rule 33 ($@7)
+
+    $@7  go to state 133
+
+
+State 82
+
+   35 func_declaration: DEINIT . '(' ')'
+   36                 | DEINIT .  [error, SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, PUBLIC, PRIVATE, CONST, INIT, DEINIT, ';', '}']
+
+    '('  shift, and go to state 134
+
+    $default  reduce using rule 36 (func_declaration)
+
+
+State 83
+
+   18 struct_element: ';' .
+
+    $default  reduce using rule 18 (struct_element)
+
+
+State 84
+
+   13 struct_definition: STRUCT SYMBOL $@3 '{' struct_list . '}'
+   15 struct_list: struct_list . struct_element
+
+    error    shift, and go to state 78
+    PUBLIC   shift, and go to state 79
+    PRIVATE  shift, and go to state 80
+    INIT     shift, and go to state 81
+    DEINIT   shift, and go to state 82
+    ';'      shift, and go to state 83
+    '}'      shift, and go to state 135
+
+    SYMBOL   reduce using rule 19 (scope_specifier)
+    BOOL     reduce using rule 19 (scope_specifier)
+    STRING   reduce using rule 19 (scope_specifier)
+    FLOAT    reduce using rule 19 (scope_specifier)
+    INT      reduce using rule 19 (scope_specifier)
+    UINT     reduce using rule 19 (scope_specifier)
+    NOTHING  reduce using rule 19 (scope_specifier)
+    CONST    reduce using rule 19 (scope_specifier)
+
+    struct_element    go to state 136
+    scope_specifier   go to state 86
+    var_declaration   go to state 87
+    func_declaration  go to state 88
+
+
+State 85
+
+   14 struct_list: struct_element .
+
+    $default  reduce using rule 14 (struct_list)
+
+
+State 86
+
+   22 var_declaration: scope_specifier . CONST compound_type SYMBOL
+   23                | scope_specifier . compound_type SYMBOL
+   24                | scope_specifier . compound_type LIST SYMBOL
+   25                | scope_specifier . compound_type DICT SYMBOL
+   28 func_declaration: scope_specifier . compound_type SYMBOL $@4 '(' func_def_parms ')'
+   30                 | scope_specifier . compound_type LIST SYMBOL $@5 '(' func_def_parms ')'
+   32                 | scope_specifier . compound_type DICT SYMBOL $@6 '(' func_def_parms ')'
+
+    SYMBOL   shift, and go to state 5
+    BOOL     shift, and go to state 6
+    STRING   shift, and go to state 7
+    FLOAT    shift, and go to state 8
+    INT      shift, and go to state 9
+    UINT     shift, and go to state 10
+    NOTHING  shift, and go to state 11
+    CONST    shift, and go to state 137
+
+    compound_name   go to state 89
+    compound_type   go to state 138
+    type_specifier  go to state 25
+
+
+State 87
+
+   16 struct_element: var_declaration .
+
+    $default  reduce using rule 16 (struct_element)
+
+
+State 88
+
+   17 struct_element: func_declaration .
+
+    $default  reduce using rule 17 (struct_element)
+
+
+State 89
+
+   39 compound_name: compound_name . '.' SYMBOL
+  142 compound_type: compound_name .  [SYMBOL, DICT, LIST]
+
+    '.'  shift, and go to state 42
+
+    $default  reduce using rule 142 (compound_type)
+
+
+State 90
+
+   58 func_def_parms: func_def_parms_items .
+
+    $default  reduce using rule 58 (func_def_parms)
+
+
+State 91
+
+   47 func_definition: init_preamble INIT $@11 '(' func_def_parms . ')' $@12 func_body
+   59 func_def_parms: func_def_parms . ',' func_def_parms_items
+
+    ')'  shift, and go to state 139
+    ','  shift, and go to state 140
+
+
+State 92
+
+   55 func_def_parms_items: compound_type . SYMBOL
+   56                     | compound_type . LIST SYMBOL
+   57                     | compound_type . DICT SYMBOL
+
+    SYMBOL  shift, and go to state 141
+    DICT    shift, and go to state 142
+    LIST    shift, and go to state 143
+
+
+State 93
+
+   52 func_definition: init_preamble DEINIT $@14 '(' ')' . $@15 func_body
+
+    $default  reduce using rule 51 ($@15)
+
+    $@15  go to state 144
+
+
+State 94
+
+   42 func_definition: compound_type compound_name $@8 '(' func_def_parms . ')' $@9 func_body
+   59 func_def_parms: func_def_parms . ',' func_def_parms_items
+
+    ')'  shift, and go to state 145
+    ','  shift, and go to state 140
+
+
+State 95
+
+   11 namespace_definition: NAMESPACE SYMBOL $@2 '{' module_list '}' .
+
+    $default  reduce using rule 11 (namespace_definition)
+
+
+State 96
+
+  123 switch_statement: SWITCH $@26 . comparison_expr '{' case_clause '}'
+
+    '('  shift, and go to state 115
+
+    comparison_expr  go to state 146
+
+
+State 97
+
+  151 constant: FPCONST .
+
+    $default  reduce using rule 151 (constant)
+
+
+State 98
+
+  152 constant: INTCONST .
+
+    $default  reduce using rule 152 (constant)
+
+
+State 99
+
+  153 constant: UINTCONST .
+
+    $default  reduce using rule 153 (constant)
+
+
+State 100
+
+  154 constant: BOOLCONST .
+
+    $default  reduce using rule 154 (constant)
+
+
+State 101
+
+   38 compound_name: SYMBOL .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, '+', '-', '*', '/', '%', ';', '{', '}', '.', '(', ')', ',', '[', ']']
+  178 expression: SYMBOL . ADD_ASSIGN expression
+  179           | SYMBOL . SUB_ASSIGN expression
+  180           | SYMBOL . MUL_ASSIGN expression
+  181           | SYMBOL . DIV_ASSIGN expression
+  182           | SYMBOL . MOD_ASSIGN expression
+
+    ADD_ASSIGN  shift, and go to state 147
+    SUB_ASSIGN  shift, and go to state 148
+    MUL_ASSIGN  shift, and go to state 149
+    DIV_ASSIGN  shift, and go to state 150
+    MOD_ASSIGN  shift, and go to state 151
+
+    $default  reduce using rule 38 (compound_name)
+
+
+State 102
+
+  148 type_specifier: NOTHING .  [':']
+  155 constant: NOTHING .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, '+', '-', '*', '/', '%', ';', '{', '}', ')', ',', ']']
+
+    ':'       reduce using rule 148 (type_specifier)
+    $default  reduce using rule 155 (constant)
+
+
+State 103
+
+  176 expression: NOT . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 152
+
+
+State 104
+
+  175 expression: '-' . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 153
+
+
+State 105
+
+  183 expression: '(' . expression ')'
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 154
+
+
+State 106
+
+   39 compound_name: compound_name . '.' SYMBOL
+  133 func_call: compound_name . $@29 '(' fcall_list ')'
+  149 list_reference: compound_name . '[' expression ']'
+  150 dict_reference: compound_name . '[' formatted_string ']'
+  157 expression_factor: compound_name .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, '+', '-', '*', '/', '%', ';', '{', '}', ')', ',', ']']
+
+    '.'  shift, and go to state 42
+    '['  shift, and go to state 120
+
+    '('       reduce using rule 132 ($@29)
+    $default  reduce using rule 157 (expression_factor)
+
+    $@29  go to state 121
+
+
+State 107
+
+  160 expression_factor: func_call .
+
+    $default  reduce using rule 160 (expression_factor)
+
+
+State 108
+
+  177 expression: type_specifier . ':' SYMBOL
+
+    ':'  shift, and go to state 155
+
+
+State 109
+
+  158 expression_factor: list_reference .
+
+    $default  reduce using rule 158 (expression_factor)
+
+
+State 110
+
+  159 expression_factor: dict_reference .
+
+    $default  reduce using rule 159 (expression_factor)
+
+
+State 111
+
+  156 expression_factor: constant .
+
+    $default  reduce using rule 156 (expression_factor)
+
+
+State 112
+
+  161 expression: expression_factor .
+
+    $default  reduce using rule 161 (expression)
+
+
+State 113
+
+   97 func_body_element: RETURN expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}']
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 97 (func_body_element)
+
+
+State 114
+
+  111 if_introduction: IF $@21 . comparison_expr
+
+    '('  shift, and go to state 115
+
+    comparison_expr  go to state 169
+
+
+State 115
+
+  103 comparison_expr: '(' . $@17 expression ')'
+  104                | '(' . ')'
+
+    ')'  shift, and go to state 170
+
+    $default  reduce using rule 102 ($@17)
+
+    $@17  go to state 171
+
+
+State 116
+
+  106 while_statement: WHILE comparison_expr . $@18 func_body
+
+    $default  reduce using rule 105 ($@18)
+
+    $@18  go to state 172
+
+
+State 117
+
+  109 do_statement: DO $@19 . func_body $@20 WHILE comparison_expr
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 173
+
+
+State 118
+
+   98 func_body_element: EXIT expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}']
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 98 (func_body_element)
+
+
+State 119
+
+   84 func_body_element: compound_name '=' . assignment_item
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    STRCONST   shift, and go to state 174
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    assignment_item    go to state 175
+    func_call          go to state 107
+    formatted_string   go to state 176
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 177
+
+
+State 120
+
+  149 list_reference: compound_name '[' . expression ']'
+  150 dict_reference: compound_name '[' . formatted_string ']'
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    STRCONST   shift, and go to state 174
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    formatted_string   go to state 178
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 179
+
+
+State 121
+
+  133 func_call: compound_name $@29 . '(' fcall_list ')'
+
+    '('  shift, and go to state 180
+
+
+State 122
+
+   61 func_body: '{' $@16 func_body_list '}' .
+
+    $default  reduce using rule 61 (func_body)
+
+
+State 123
+
+   64 func_body_list: func_body_list func_body_element .
+
+    $default  reduce using rule 64 (func_body_list)
+
+
+State 124
+
+   83 func_body_element: var_definition '=' . assignment_item
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    STRCONST   shift, and go to state 174
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    assignment_item    go to state 181
+    func_call          go to state 107
+    formatted_string   go to state 176
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 177
+
+
+State 125
+
+   85 func_body_element: list_definition '=' . list_initializer
+
+    SYMBOL  shift, and go to state 5
+    '['     shift, and go to state 182
+
+    compound_name     go to state 183
+    list_initializer  go to state 184
+
+
+State 126
+
+   87 func_body_element: dict_definition '=' . dict_initializer
+
+    SYMBOL  shift, and go to state 5
+    '['     shift, and go to state 185
+
+    compound_name     go to state 186
+    dict_initializer  go to state 187
+
+
+State 127
+
+  112 if_statement: if_introduction func_body .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}']
+  114             | if_introduction func_body . $@22 else_clause_list
+
+    ELSE      reduce using rule 113 ($@22)
+    $default  reduce using rule 112 (if_statement)
+
+    $@22  go to state 188
+
+
+State 128
+
+   79 var_definition: compound_type SYMBOL .
+
+    $default  reduce using rule 79 (var_definition)
+
+
+State 129
+
+   81 dict_definition: compound_type DICT . SYMBOL
+
+    SYMBOL  shift, and go to state 189
+
+
+State 130
+
+   80 list_definition: compound_type LIST . SYMBOL
+
+    SYMBOL  shift, and go to state 190
+
+
+State 131
+
+   89 func_body_element: list_reference '=' . assignment_item
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    STRCONST   shift, and go to state 174
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    assignment_item    go to state 191
+    func_call          go to state 107
+    formatted_string   go to state 176
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 177
+
+
+State 132
+
+   90 func_body_element: dict_reference '=' . assignment_item
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    STRCONST   shift, and go to state 174
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    assignment_item    go to state 192
+    func_call          go to state 107
+    formatted_string   go to state 176
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 177
+
+
+State 133
+
+   34 func_declaration: INIT $@7 . '(' func_def_parms ')'
+
+    '('  shift, and go to state 193
+
+
+State 134
+
+   35 func_declaration: DEINIT '(' . ')'
+
+    ')'  shift, and go to state 194
+
+
+State 135
+
+   13 struct_definition: STRUCT SYMBOL $@3 '{' struct_list '}' .
+
+    $default  reduce using rule 13 (struct_definition)
+
+
+State 136
+
+   15 struct_list: struct_list struct_element .
+
+    $default  reduce using rule 15 (struct_list)
+
+
+State 137
+
+   22 var_declaration: scope_specifier CONST . compound_type SYMBOL
+
+    SYMBOL   shift, and go to state 5
+    BOOL     shift, and go to state 6
+    STRING   shift, and go to state 7
+    FLOAT    shift, and go to state 8
+    INT      shift, and go to state 9
+    UINT     shift, and go to state 10
+    NOTHING  shift, and go to state 11
+
+    compound_name   go to state 89
+    compound_type   go to state 195
+    type_specifier  go to state 25
+
+
+State 138
+
+   23 var_declaration: scope_specifier compound_type . SYMBOL
+   24                | scope_specifier compound_type . LIST SYMBOL
+   25                | scope_specifier compound_type . DICT SYMBOL
+   28 func_declaration: scope_specifier compound_type . SYMBOL $@4 '(' func_def_parms ')'
+   30                 | scope_specifier compound_type . LIST SYMBOL $@5 '(' func_def_parms ')'
+   32                 | scope_specifier compound_type . DICT SYMBOL $@6 '(' func_def_parms ')'
+
+    SYMBOL  shift, and go to state 196
+    DICT    shift, and go to state 197
+    LIST    shift, and go to state 198
+
+
+State 139
+
+   47 func_definition: init_preamble INIT $@11 '(' func_def_parms ')' . $@12 func_body
+
+    $default  reduce using rule 46 ($@12)
+
+    $@12  go to state 199
+
+
+State 140
+
+   59 func_def_parms: func_def_parms ',' . func_def_parms_items
+
+    SYMBOL   shift, and go to state 5
+    BOOL     shift, and go to state 6
+    STRING   shift, and go to state 7
+    FLOAT    shift, and go to state 8
+    INT      shift, and go to state 9
+    UINT     shift, and go to state 10
+    NOTHING  shift, and go to state 11
+
+    $default  reduce using rule 54 (func_def_parms_items)
+
+    compound_name         go to state 89
+    func_def_parms_items  go to state 200
+    compound_type         go to state 92
+    type_specifier        go to state 25
+
+
+State 141
+
+   55 func_def_parms_items: compound_type SYMBOL .
+
+    $default  reduce using rule 55 (func_def_parms_items)
+
+
+State 142
+
+   57 func_def_parms_items: compound_type DICT . SYMBOL
+
+    SYMBOL  shift, and go to state 201
+
+
+State 143
+
+   56 func_def_parms_items: compound_type LIST . SYMBOL
+
+    SYMBOL  shift, and go to state 202
+
+
+State 144
+
+   52 func_definition: init_preamble DEINIT $@14 '(' ')' $@15 . func_body
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 203
+
+
+State 145
+
+   42 func_definition: compound_type compound_name $@8 '(' func_def_parms ')' . $@9 func_body
+
+    $default  reduce using rule 41 ($@9)
+
+    $@9  go to state 204
+
+
+State 146
+
+  123 switch_statement: SWITCH $@26 comparison_expr . '{' case_clause '}'
+
+    '{'  shift, and go to state 205
+
+
+State 147
+
+  178 expression: SYMBOL ADD_ASSIGN . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 206
+
+
+State 148
+
+  179 expression: SYMBOL SUB_ASSIGN . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 207
+
+
+State 149
+
+  180 expression: SYMBOL MUL_ASSIGN . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 208
+
+
+State 150
+
+  181 expression: SYMBOL DIV_ASSIGN . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 209
+
+
+State 151
+
+  182 expression: SYMBOL MOD_ASSIGN . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 210
+
+
+State 152
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+  176           | NOT expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, '+', '-', '*', '/', '%', ';', '{', '}', ')', ',', ']']
+
+    $default  reduce using rule 176 (expression)
+
+
+State 153
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+  175           | '-' expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, '+', '-', '*', '/', '%', ';', '{', '}', ')', ',', ']']
+
+    $default  reduce using rule 175 (expression)
+
+
+State 154
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+  183           | '(' expression . ')'
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+    ')'  shift, and go to state 211
+
+
+State 155
+
+  177 expression: type_specifier ':' . SYMBOL
+
+    SYMBOL  shift, and go to state 212
+
+
+State 156
+
+  173 expression: expression AND . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 213
+
+
+State 157
+
+  174 expression: expression OR . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 214
+
+
+State 158
+
+  167 expression: expression EQ . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 215
+
+
+State 159
+
+  168 expression: expression NEQ . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 216
+
+
+State 160
+
+  171 expression: expression LTE . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 217
+
+
+State 161
+
+  172 expression: expression GTE . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 218
+
+
+State 162
+
+  169 expression: expression LT . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 219
+
+
+State 163
+
+  170 expression: expression GT . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 220
+
+
+State 164
+
+  162 expression: expression '+' . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 221
+
+
+State 165
+
+  163 expression: expression '-' . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 222
+
+
+State 166
+
+  164 expression: expression '*' . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 223
+
+
+State 167
+
+  165 expression: expression '/' . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 224
+
+
+State 168
+
+  166 expression: expression '%' . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 225
+
+
+State 169
+
+  111 if_introduction: IF $@21 comparison_expr .
+
+    $default  reduce using rule 111 (if_introduction)
+
+
+State 170
+
+  104 comparison_expr: '(' ')' .
+
+    $default  reduce using rule 104 (comparison_expr)
+
+
+State 171
+
+  103 comparison_expr: '(' $@17 . expression ')'
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 226
+
+
+State 172
+
+  106 while_statement: WHILE comparison_expr $@18 . func_body
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 227
+
+
+State 173
+
+  109 do_statement: DO $@19 func_body . $@20 WHILE comparison_expr
+
+    $default  reduce using rule 108 ($@20)
+
+    $@20  go to state 228
+
+
+State 174
+
+  139 formatted_string: STRCONST .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}', ')', ',', ']']
+  140                 | STRCONST . '(' expression_list ')'
+
+    '('  shift, and go to state 229
+
+    $default  reduce using rule 139 (formatted_string)
+
+
+State 175
+
+   84 func_body_element: compound_name '=' assignment_item .
+
+    $default  reduce using rule 84 (func_body_element)
+
+
+State 176
+
+   78 assignment_item: formatted_string .
+
+    $default  reduce using rule 78 (assignment_item)
+
+
+State 177
+
+   77 assignment_item: expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}', ',', ']']
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 77 (assignment_item)
+
+
+State 178
+
+  150 dict_reference: compound_name '[' formatted_string . ']'
+
+    ']'  shift, and go to state 230
+
+
+State 179
+
+  149 list_reference: compound_name '[' expression . ']'
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+    ']'  shift, and go to state 231
+
+
+State 180
+
+  133 func_call: compound_name $@29 '(' . fcall_list ')'
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    STRCONST   shift, and go to state 174
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    $default  reduce using rule 134 (fcall_list)
+
+    compound_name       go to state 106
+    func_call           go to state 107
+    fcall_list          go to state 232
+    fcall_list_element  go to state 233
+    formatted_string    go to state 234
+    type_specifier      go to state 108
+    list_reference      go to state 109
+    dict_reference      go to state 110
+    constant            go to state 111
+    expression_factor   go to state 112
+    expression          go to state 235
+
+
+State 181
+
+   83 func_body_element: var_definition '=' assignment_item .
+
+    $default  reduce using rule 83 (func_body_element)
+
+
+State 182
+
+   65 list_initializer: '[' . ']'
+   66                 | '[' . list_initializer_list ']'
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    STRCONST   shift, and go to state 174
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+    ']'        shift, and go to state 236
+
+    compound_name          go to state 106
+    list_initializer_list  go to state 237
+    assignment_item        go to state 238
+    func_call              go to state 107
+    formatted_string       go to state 176
+    type_specifier         go to state 108
+    list_reference         go to state 109
+    dict_reference         go to state 110
+    constant               go to state 111
+    expression_factor      go to state 112
+    expression             go to state 177
+
+
+State 183
+
+   39 compound_name: compound_name . '.' SYMBOL
+   67 list_initializer: compound_name .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}']
+
+    '.'  shift, and go to state 42
+
+    $default  reduce using rule 67 (list_initializer)
+
+
+State 184
+
+   85 func_body_element: list_definition '=' list_initializer .
+
+    $default  reduce using rule 85 (func_body_element)
+
+
+State 185
+
+   74 dict_initializer: '[' . ']'
+   75                 | '[' . dict_initializer_list ']'
+
+    SYMBOL  shift, and go to state 239
+    ']'     shift, and go to state 240
+
+    dict_initializer_item  go to state 241
+    dict_initializer_list  go to state 242
+
+
+State 186
+
+   39 compound_name: compound_name . '.' SYMBOL
+   76 dict_initializer: compound_name .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}']
+
+    '.'  shift, and go to state 42
+
+    $default  reduce using rule 76 (dict_initializer)
+
+
+State 187
+
+   87 func_body_element: dict_definition '=' dict_initializer .
+
+    $default  reduce using rule 87 (func_body_element)
+
+
+State 188
+
+  114 if_statement: if_introduction func_body $@22 . else_clause_list
+
+    ELSE  shift, and go to state 243
+
+    else_clause       go to state 244
+    else_clause_list  go to state 245
+
+
+State 189
+
+   81 dict_definition: compound_type DICT SYMBOL .
+
+    $default  reduce using rule 81 (dict_definition)
+
+
+State 190
+
+   80 list_definition: compound_type LIST SYMBOL .
+
+    $default  reduce using rule 80 (list_definition)
+
+
+State 191
+
+   89 func_body_element: list_reference '=' assignment_item .
+
+    $default  reduce using rule 89 (func_body_element)
+
+
+State 192
+
+   90 func_body_element: dict_reference '=' assignment_item .
+
+    $default  reduce using rule 90 (func_body_element)
+
+
+State 193
+
+   34 func_declaration: INIT $@7 '(' . func_def_parms ')'
+
+    SYMBOL   shift, and go to state 5
+    BOOL     shift, and go to state 6
+    STRING   shift, and go to state 7
+    FLOAT    shift, and go to state 8
+    INT      shift, and go to state 9
+    UINT     shift, and go to state 10
+    NOTHING  shift, and go to state 11
+
+    $default  reduce using rule 54 (func_def_parms_items)
+
+    compound_name         go to state 89
+    func_def_parms_items  go to state 90
+    func_def_parms        go to state 246
+    compound_type         go to state 92
+    type_specifier        go to state 25
+
+
+State 194
+
+   35 func_declaration: DEINIT '(' ')' .
+
+    $default  reduce using rule 35 (func_declaration)
+
+
+State 195
+
+   22 var_declaration: scope_specifier CONST compound_type . SYMBOL
+
+    SYMBOL  shift, and go to state 247
+
+
+State 196
+
+   23 var_declaration: scope_specifier compound_type SYMBOL .  [error, SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, PUBLIC, PRIVATE, CONST, INIT, DEINIT, ';', '}']
+   28 func_declaration: scope_specifier compound_type SYMBOL . $@4 '(' func_def_parms ')'
+
+    '('       reduce using rule 27 ($@4)
+    $default  reduce using rule 23 (var_declaration)
+
+    $@4  go to state 248
+
+
+State 197
+
+   25 var_declaration: scope_specifier compound_type DICT . SYMBOL
+   32 func_declaration: scope_specifier compound_type DICT . SYMBOL $@6 '(' func_def_parms ')'
+
+    SYMBOL  shift, and go to state 249
+
+
+State 198
+
+   24 var_declaration: scope_specifier compound_type LIST . SYMBOL
+   30 func_declaration: scope_specifier compound_type LIST . SYMBOL $@5 '(' func_def_parms ')'
+
+    SYMBOL  shift, and go to state 250
+
+
+State 199
+
+   47 func_definition: init_preamble INIT $@11 '(' func_def_parms ')' $@12 . func_body
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 251
+
+
+State 200
+
+   59 func_def_parms: func_def_parms ',' func_def_parms_items .
+
+    $default  reduce using rule 59 (func_def_parms)
+
+
+State 201
+
+   57 func_def_parms_items: compound_type DICT SYMBOL .
+
+    $default  reduce using rule 57 (func_def_parms_items)
+
+
+State 202
+
+   56 func_def_parms_items: compound_type LIST SYMBOL .
+
+    $default  reduce using rule 56 (func_def_parms_items)
+
+
+State 203
+
+   52 func_definition: init_preamble DEINIT $@14 '(' ')' $@15 func_body .
+
+    $default  reduce using rule 52 (func_definition)
+
+
+State 204
+
+   42 func_definition: compound_type compound_name $@8 '(' func_def_parms ')' $@9 . func_body
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 252
+
+
+State 205
+
+  123 switch_statement: SWITCH $@26 comparison_expr '{' . case_clause '}'
+
+    CASE  shift, and go to state 253
+
+    case_base         go to state 254
+    case_clause       go to state 255
+    case_clause_list  go to state 256
+
+
+State 206
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+  178           | SYMBOL ADD_ASSIGN expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}', ')', ',', ']']
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 178 (expression)
+
+
+State 207
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+  179           | SYMBOL SUB_ASSIGN expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}', ')', ',', ']']
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 179 (expression)
+
+
+State 208
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+  180           | SYMBOL MUL_ASSIGN expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}', ')', ',', ']']
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 180 (expression)
+
+
+State 209
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+  181           | SYMBOL DIV_ASSIGN expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}', ')', ',', ']']
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 181 (expression)
+
+
+State 210
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+  182           | SYMBOL MOD_ASSIGN expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}', ')', ',', ']']
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 182 (expression)
+
+
+State 211
+
+  183 expression: '(' expression ')' .
+
+    $default  reduce using rule 183 (expression)
+
+
+State 212
+
+  177 expression: type_specifier ':' SYMBOL .
+
+    $default  reduce using rule 177 (expression)
+
+
+State 213
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  173           | expression AND expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EXIT, ';', '{', '}', ')', ',', ']']
+  174           | expression . OR expression
+
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 173 (expression)
+
+
+State 214
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+  174           | expression OR expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EXIT, ';', '{', '}', ')', ',', ']']
+
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 174 (expression)
+
+
+State 215
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  167           | expression EQ expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, EXIT, ';', '{', '}', ')', ',', ']']
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 167 (expression)
+
+
+State 216
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  168           | expression NEQ expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, EXIT, ';', '{', '}', ')', ',', ']']
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 168 (expression)
+
+
+State 217
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  171           | expression LTE expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, ';', '{', '}', ')', ',', ']']
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 171 (expression)
+
+
+State 218
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  172           | expression GTE expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, ';', '{', '}', ')', ',', ']']
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 172 (expression)
+
+
+State 219
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  169           | expression LT expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, ';', '{', '}', ')', ',', ']']
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 169 (expression)
+
+
+State 220
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  170           | expression GT expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, ';', '{', '}', ')', ',', ']']
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 170 (expression)
+
+
+State 221
+
+  162 expression: expression . '+' expression
+  162           | expression '+' expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, '+', '-', ';', '{', '}', ')', ',', ']']
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 162 (expression)
+
+
+State 222
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  163           | expression '-' expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, '+', '-', ';', '{', '}', ')', ',', ']']
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 163 (expression)
+
+
+State 223
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  164           | expression '*' expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, '+', '-', '*', '/', '%', ';', '{', '}', ')', ',', ']']
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    $default  reduce using rule 164 (expression)
+
+
+State 224
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  165           | expression '/' expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, '+', '-', '*', '/', '%', ';', '{', '}', ')', ',', ']']
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    $default  reduce using rule 165 (expression)
+
+
+State 225
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  166           | expression '%' expression .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, AND, OR, EQ, NEQ, LTE, GTE, LT, GT, EXIT, '+', '-', '*', '/', '%', ';', '{', '}', ')', ',', ']']
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    $default  reduce using rule 166 (expression)
+
+
+State 226
+
+  103 comparison_expr: '(' $@17 expression . ')'
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+    ')'  shift, and go to state 257
+
+
+State 227
+
+  106 while_statement: WHILE comparison_expr $@18 func_body .
+
+    $default  reduce using rule 106 (while_statement)
+
+
+State 228
+
+  109 do_statement: DO $@19 func_body $@20 . WHILE comparison_expr
+
+    WHILE  shift, and go to state 258
+
+
+State 229
+
+  140 formatted_string: STRCONST '(' . expression_list ')'
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 259
+    expression_list    go to state 260
+
+
+State 230
+
+  150 dict_reference: compound_name '[' formatted_string ']' .
+
+    $default  reduce using rule 150 (dict_reference)
+
+
+State 231
+
+  149 list_reference: compound_name '[' expression ']' .
+
+    $default  reduce using rule 149 (list_reference)
+
+
+State 232
+
+  133 func_call: compound_name $@29 '(' fcall_list . ')'
+  136 fcall_list: fcall_list . ',' fcall_list_element
+
+    ')'  shift, and go to state 261
+    ','  shift, and go to state 262
+
+
+State 233
+
+  135 fcall_list: fcall_list_element .
+
+    $default  reduce using rule 135 (fcall_list)
+
+
+State 234
+
+  138 fcall_list_element: formatted_string .
+
+    $default  reduce using rule 138 (fcall_list_element)
+
+
+State 235
+
+  137 fcall_list_element: expression .  [')', ',']
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 137 (fcall_list_element)
+
+
+State 236
+
+   65 list_initializer: '[' ']' .
+
+    $default  reduce using rule 65 (list_initializer)
+
+
+State 237
+
+   66 list_initializer: '[' list_initializer_list . ']'
+   69 list_initializer_list: list_initializer_list . ',' assignment_item
+
+    ','  shift, and go to state 263
+    ']'  shift, and go to state 264
+
+
+State 238
+
+   68 list_initializer_list: assignment_item .
+
+    $default  reduce using rule 68 (list_initializer_list)
+
+
+State 239
+
+   70 dict_initializer_item: SYMBOL . '=' expression
+   71                      | SYMBOL . '=' formatted_string
+
+    '='  shift, and go to state 265
+
+
+State 240
+
+   74 dict_initializer: '[' ']' .
+
+    $default  reduce using rule 74 (dict_initializer)
+
+
+State 241
+
+   72 dict_initializer_list: dict_initializer_item .
+
+    $default  reduce using rule 72 (dict_initializer_list)
+
+
+State 242
+
+   73 dict_initializer_list: dict_initializer_list . ',' dict_initializer_item
+   75 dict_initializer: '[' dict_initializer_list . ']'
+
+    ','  shift, and go to state 266
+    ']'  shift, and go to state 267
+
+
+State 243
+
+  117 else_clause: ELSE . $@23 comparison_expr $@24 func_body
+  119            | ELSE . $@25 func_body
+
+    '{'       reduce using rule 118 ($@25)
+    $default  reduce using rule 115 ($@23)
+
+    $@23  go to state 268
+    $@25  go to state 269
+
+
+State 244
+
+  120 else_clause_list: else_clause .
+
+    $default  reduce using rule 120 (else_clause_list)
+
+
+State 245
+
+  114 if_statement: if_introduction func_body $@22 else_clause_list .  [SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, SWITCH, RETURN, IF, WHILE, DO, BREAK, CONTINUE, EXIT, ';', '{', '}']
+  121 else_clause_list: else_clause_list . else_clause
+
+    ELSE  shift, and go to state 243
+
+    $default  reduce using rule 114 (if_statement)
+
+    else_clause  go to state 270
+
+
+State 246
+
+   34 func_declaration: INIT $@7 '(' func_def_parms . ')'
+   59 func_def_parms: func_def_parms . ',' func_def_parms_items
+
+    ')'  shift, and go to state 271
+    ','  shift, and go to state 140
+
+
+State 247
+
+   22 var_declaration: scope_specifier CONST compound_type SYMBOL .
+
+    $default  reduce using rule 22 (var_declaration)
+
+
+State 248
+
+   28 func_declaration: scope_specifier compound_type SYMBOL $@4 . '(' func_def_parms ')'
+
+    '('  shift, and go to state 272
+
+
+State 249
+
+   25 var_declaration: scope_specifier compound_type DICT SYMBOL .  [error, SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, PUBLIC, PRIVATE, CONST, INIT, DEINIT, ';', '}']
+   32 func_declaration: scope_specifier compound_type DICT SYMBOL . $@6 '(' func_def_parms ')'
+
+    '('       reduce using rule 31 ($@6)
+    $default  reduce using rule 25 (var_declaration)
+
+    $@6  go to state 273
+
+
+State 250
+
+   24 var_declaration: scope_specifier compound_type LIST SYMBOL .  [error, SYMBOL, BOOL, STRING, FLOAT, INT, UINT, NOTHING, PUBLIC, PRIVATE, CONST, INIT, DEINIT, ';', '}']
+   30 func_declaration: scope_specifier compound_type LIST SYMBOL . $@5 '(' func_def_parms ')'
+
+    '('       reduce using rule 29 ($@5)
+    $default  reduce using rule 24 (var_declaration)
+
+    $@5  go to state 274
+
+
+State 251
+
+   47 func_definition: init_preamble INIT $@11 '(' func_def_parms ')' $@12 func_body .
+
+    $default  reduce using rule 47 (func_definition)
+
+
+State 252
+
+   42 func_definition: compound_type compound_name $@8 '(' func_def_parms ')' $@9 func_body .
+
+    $default  reduce using rule 42 (func_definition)
+
+
+State 253
+
+  127 case_base: CASE . '(' constant ')' $@28 func_body
+
+    '('  shift, and go to state 275
+
+
+State 254
+
+  130 case_clause_list: case_base .
+
+    $default  reduce using rule 130 (case_clause_list)
+
+
+State 255
+
+  123 switch_statement: SWITCH $@26 comparison_expr '{' case_clause . '}'
+
+    '}'  shift, and go to state 276
+
+
+State 256
+
+  128 case_clause: case_clause_list .  ['}']
+  129            | case_clause_list . default_clause
+  131 case_clause_list: case_clause_list . case_base
+
+    CASE     shift, and go to state 253
+    DEFAULT  shift, and go to state 277
+
+    $default  reduce using rule 128 (case_clause)
+
+    default_clause  go to state 278
+    case_base       go to state 279
+
+
+State 257
+
+  103 comparison_expr: '(' $@17 expression ')' .
+
+    $default  reduce using rule 103 (comparison_expr)
+
+
+State 258
+
+  109 do_statement: DO $@19 func_body $@20 WHILE . comparison_expr
+
+    '('  shift, and go to state 115
+
+    comparison_expr  go to state 280
+
+
+State 259
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+  184 expression_list: expression .  [')', ',']
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 184 (expression_list)
+
+
+State 260
+
+  140 formatted_string: STRCONST '(' expression_list . ')'
+  185 expression_list: expression_list . ',' expression
+
+    ')'  shift, and go to state 281
+    ','  shift, and go to state 282
+
+
+State 261
+
+  133 func_call: compound_name $@29 '(' fcall_list ')' .
+
+    $default  reduce using rule 133 (func_call)
+
+
+State 262
+
+  136 fcall_list: fcall_list ',' . fcall_list_element
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    STRCONST   shift, and go to state 174
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name       go to state 106
+    func_call           go to state 107
+    fcall_list_element  go to state 283
+    formatted_string    go to state 234
+    type_specifier      go to state 108
+    list_reference      go to state 109
+    dict_reference      go to state 110
+    constant            go to state 111
+    expression_factor   go to state 112
+    expression          go to state 235
+
+
+State 263
+
+   69 list_initializer_list: list_initializer_list ',' . assignment_item
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    STRCONST   shift, and go to state 174
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    assignment_item    go to state 284
+    func_call          go to state 107
+    formatted_string   go to state 176
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 177
+
+
+State 264
+
+   66 list_initializer: '[' list_initializer_list ']' .
+
+    $default  reduce using rule 66 (list_initializer)
+
+
+State 265
+
+   70 dict_initializer_item: SYMBOL '=' . expression
+   71                      | SYMBOL '=' . formatted_string
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    STRCONST   shift, and go to state 174
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    formatted_string   go to state 285
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 286
+
+
+State 266
+
+   73 dict_initializer_list: dict_initializer_list ',' . dict_initializer_item
+
+    SYMBOL  shift, and go to state 239
+
+    dict_initializer_item  go to state 287
+
+
+State 267
+
+   75 dict_initializer: '[' dict_initializer_list ']' .
+
+    $default  reduce using rule 75 (dict_initializer)
+
+
+State 268
+
+  117 else_clause: ELSE $@23 . comparison_expr $@24 func_body
+
+    '('  shift, and go to state 115
+
+    comparison_expr  go to state 288
+
+
+State 269
+
+  119 else_clause: ELSE $@25 . func_body
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 289
+
+
+State 270
+
+  121 else_clause_list: else_clause_list else_clause .
+
+    $default  reduce using rule 121 (else_clause_list)
+
+
+State 271
+
+   34 func_declaration: INIT $@7 '(' func_def_parms ')' .
+
+    $default  reduce using rule 34 (func_declaration)
+
+
+State 272
+
+   28 func_declaration: scope_specifier compound_type SYMBOL $@4 '(' . func_def_parms ')'
+
+    SYMBOL   shift, and go to state 5
+    BOOL     shift, and go to state 6
+    STRING   shift, and go to state 7
+    FLOAT    shift, and go to state 8
+    INT      shift, and go to state 9
+    UINT     shift, and go to state 10
+    NOTHING  shift, and go to state 11
+
+    $default  reduce using rule 54 (func_def_parms_items)
+
+    compound_name         go to state 89
+    func_def_parms_items  go to state 90
+    func_def_parms        go to state 290
+    compound_type         go to state 92
+    type_specifier        go to state 25
+
+
+State 273
+
+   32 func_declaration: scope_specifier compound_type DICT SYMBOL $@6 . '(' func_def_parms ')'
+
+    '('  shift, and go to state 291
+
+
+State 274
+
+   30 func_declaration: scope_specifier compound_type LIST SYMBOL $@5 . '(' func_def_parms ')'
+
+    '('  shift, and go to state 292
+
+
+State 275
+
+  127 case_base: CASE '(' . constant ')' $@28 func_body
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    NOTHING    shift, and go to state 293
+
+    constant  go to state 294
+
+
+State 276
+
+  123 switch_statement: SWITCH $@26 comparison_expr '{' case_clause '}' .
+
+    $default  reduce using rule 123 (switch_statement)
+
+
+State 277
+
+  125 default_clause: DEFAULT . $@27 func_body
+
+    $default  reduce using rule 124 ($@27)
+
+    $@27  go to state 295
+
+
+State 278
+
+  129 case_clause: case_clause_list default_clause .
+
+    $default  reduce using rule 129 (case_clause)
+
+
+State 279
+
+  131 case_clause_list: case_clause_list case_base .
+
+    $default  reduce using rule 131 (case_clause_list)
+
+
+State 280
+
+  109 do_statement: DO $@19 func_body $@20 WHILE comparison_expr .
+
+    $default  reduce using rule 109 (do_statement)
+
+
+State 281
+
+  140 formatted_string: STRCONST '(' expression_list ')' .
+
+    $default  reduce using rule 140 (formatted_string)
+
+
+State 282
+
+  185 expression_list: expression_list ',' . expression
+
+    FPCONST    shift, and go to state 97
+    INTCONST   shift, and go to state 98
+    UINTCONST  shift, and go to state 99
+    BOOLCONST  shift, and go to state 100
+    SYMBOL     shift, and go to state 101
+    BOOL       shift, and go to state 6
+    STRING     shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    INT        shift, and go to state 9
+    UINT       shift, and go to state 10
+    NOTHING    shift, and go to state 102
+    NOT        shift, and go to state 103
+    '-'        shift, and go to state 104
+    '('        shift, and go to state 105
+
+    compound_name      go to state 106
+    func_call          go to state 107
+    type_specifier     go to state 108
+    list_reference     go to state 109
+    dict_reference     go to state 110
+    constant           go to state 111
+    expression_factor  go to state 112
+    expression         go to state 296
+
+
+State 283
+
+  136 fcall_list: fcall_list ',' fcall_list_element .
+
+    $default  reduce using rule 136 (fcall_list)
+
+
+State 284
+
+   69 list_initializer_list: list_initializer_list ',' assignment_item .
+
+    $default  reduce using rule 69 (list_initializer_list)
+
+
+State 285
+
+   71 dict_initializer_item: SYMBOL '=' formatted_string .
+
+    $default  reduce using rule 71 (dict_initializer_item)
+
+
+State 286
+
+   70 dict_initializer_item: SYMBOL '=' expression .  [',', ']']
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 70 (dict_initializer_item)
+
+
+State 287
+
+   73 dict_initializer_list: dict_initializer_list ',' dict_initializer_item .
+
+    $default  reduce using rule 73 (dict_initializer_list)
+
+
+State 288
+
+  117 else_clause: ELSE $@23 comparison_expr . $@24 func_body
+
+    $default  reduce using rule 116 ($@24)
+
+    $@24  go to state 297
+
+
+State 289
+
+  119 else_clause: ELSE $@25 func_body .
+
+    $default  reduce using rule 119 (else_clause)
+
+
+State 290
+
+   28 func_declaration: scope_specifier compound_type SYMBOL $@4 '(' func_def_parms . ')'
+   59 func_def_parms: func_def_parms . ',' func_def_parms_items
+
+    ')'  shift, and go to state 298
+    ','  shift, and go to state 140
+
+
+State 291
+
+   32 func_declaration: scope_specifier compound_type DICT SYMBOL $@6 '(' . func_def_parms ')'
+
+    SYMBOL   shift, and go to state 5
+    BOOL     shift, and go to state 6
+    STRING   shift, and go to state 7
+    FLOAT    shift, and go to state 8
+    INT      shift, and go to state 9
+    UINT     shift, and go to state 10
+    NOTHING  shift, and go to state 11
+
+    $default  reduce using rule 54 (func_def_parms_items)
+
+    compound_name         go to state 89
+    func_def_parms_items  go to state 90
+    func_def_parms        go to state 299
+    compound_type         go to state 92
+    type_specifier        go to state 25
+
+
+State 292
+
+   30 func_declaration: scope_specifier compound_type LIST SYMBOL $@5 '(' . func_def_parms ')'
+
+    SYMBOL   shift, and go to state 5
+    BOOL     shift, and go to state 6
+    STRING   shift, and go to state 7
+    FLOAT    shift, and go to state 8
+    INT      shift, and go to state 9
+    UINT     shift, and go to state 10
+    NOTHING  shift, and go to state 11
+
+    $default  reduce using rule 54 (func_def_parms_items)
+
+    compound_name         go to state 89
+    func_def_parms_items  go to state 90
+    func_def_parms        go to state 300
+    compound_type         go to state 92
+    type_specifier        go to state 25
+
+
+State 293
+
+  155 constant: NOTHING .
+
+    $default  reduce using rule 155 (constant)
+
+
+State 294
+
+  127 case_base: CASE '(' constant . ')' $@28 func_body
+
+    ')'  shift, and go to state 301
+
+
+State 295
+
+  125 default_clause: DEFAULT $@27 . func_body
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 302
+
+
+State 296
+
+  162 expression: expression . '+' expression
+  163           | expression . '-' expression
+  164           | expression . '*' expression
+  165           | expression . '/' expression
+  166           | expression . '%' expression
+  167           | expression . EQ expression
+  168           | expression . NEQ expression
+  169           | expression . LT expression
+  170           | expression . GT expression
+  171           | expression . LTE expression
+  172           | expression . GTE expression
+  173           | expression . AND expression
+  174           | expression . OR expression
+  185 expression_list: expression_list ',' expression .  [')', ',']
+
+    AND  shift, and go to state 156
+    OR   shift, and go to state 157
+    EQ   shift, and go to state 158
+    NEQ  shift, and go to state 159
+    LTE  shift, and go to state 160
+    GTE  shift, and go to state 161
+    LT   shift, and go to state 162
+    GT   shift, and go to state 163
+    '+'  shift, and go to state 164
+    '-'  shift, and go to state 165
+    '*'  shift, and go to state 166
+    '/'  shift, and go to state 167
+    '%'  shift, and go to state 168
+
+    $default  reduce using rule 185 (expression_list)
+
+
+State 297
+
+  117 else_clause: ELSE $@23 comparison_expr $@24 . func_body
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 303
+
+
+State 298
+
+   28 func_declaration: scope_specifier compound_type SYMBOL $@4 '(' func_def_parms ')' .
+
+    $default  reduce using rule 28 (func_declaration)
+
+
+State 299
+
+   32 func_declaration: scope_specifier compound_type DICT SYMBOL $@6 '(' func_def_parms . ')'
+   59 func_def_parms: func_def_parms . ',' func_def_parms_items
+
+    ')'  shift, and go to state 304
+    ','  shift, and go to state 140
+
+
+State 300
+
+   30 func_declaration: scope_specifier compound_type LIST SYMBOL $@5 '(' func_def_parms . ')'
+   59 func_def_parms: func_def_parms . ',' func_def_parms_items
+
+    ')'  shift, and go to state 305
+    ','  shift, and go to state 140
+
+
+State 301
+
+  127 case_base: CASE '(' constant ')' . $@28 func_body
+
+    $default  reduce using rule 126 ($@28)
+
+    $@28  go to state 306
+
+
+State 302
+
+  125 default_clause: DEFAULT $@27 func_body .
+
+    $default  reduce using rule 125 (default_clause)
+
+
+State 303
+
+  117 else_clause: ELSE $@23 comparison_expr $@24 func_body .
+
+    $default  reduce using rule 117 (else_clause)
+
+
+State 304
+
+   32 func_declaration: scope_specifier compound_type DICT SYMBOL $@6 '(' func_def_parms ')' .
+
+    $default  reduce using rule 32 (func_declaration)
+
+
+State 305
+
+   30 func_declaration: scope_specifier compound_type LIST SYMBOL $@5 '(' func_def_parms ')' .
+
+    $default  reduce using rule 30 (func_declaration)
+
+
+State 306
+
+  127 case_base: CASE '(' constant ')' $@28 . func_body
+
+    '{'  shift, and go to state 35
+
+    func_body  go to state 307
+
+
+State 307
+
+  127 case_base: CASE '(' constant ')' $@28 func_body .
+
+    $default  reduce using rule 127 (case_base)

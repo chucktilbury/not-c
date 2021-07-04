@@ -1,82 +1,82 @@
 MSG: parser.y: yyparse:69: program begin
-MSG: parser.y: yyparse:511: NOTHING type specifier
-MSG: parser.y: yyparse:189: begin compound symbol do_func1
-MSG: parser.y: yyparse:200: begin func def: NOTHING do_func1
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:202: begin func body
-MSG: parser.y: yyparse:239: empty function body
-MSG: parser.y: yyparse:204: end func body
+MSG: parser.y: yyparse:520: NOTHING type specifier
+MSG: parser.y: yyparse:198: begin compound symbol do_func1
+MSG: parser.y: yyparse:209: begin func def: NOTHING do_func1
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:211: begin func body
+MSG: parser.y: yyparse:248: empty function body
+MSG: parser.y: yyparse:213: end func body
 
-MSG: parser.y: yyparse:511: NOTHING type specifier
-MSG: parser.y: yyparse:189: begin compound symbol do_func2
-MSG: parser.y: yyparse:200: begin func def: NOTHING do_func2
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:202: begin func body
-MSG: parser.y: yyparse:239: empty function body
-MSG: parser.y: yyparse:204: end func body
+MSG: parser.y: yyparse:520: NOTHING type specifier
+MSG: parser.y: yyparse:198: begin compound symbol do_func2
+MSG: parser.y: yyparse:209: begin func def: NOTHING do_func2
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:211: begin func body
+MSG: parser.y: yyparse:248: empty function body
+MSG: parser.y: yyparse:213: end func body
 
-MSG: parser.y: yyparse:511: NOTHING type specifier
-MSG: parser.y: yyparse:189: begin compound symbol do_func3
-MSG: parser.y: yyparse:200: begin func def: NOTHING do_func3
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:202: begin func body
-MSG: parser.y: yyparse:239: empty function body
-MSG: parser.y: yyparse:204: end func body
+MSG: parser.y: yyparse:520: NOTHING type specifier
+MSG: parser.y: yyparse:198: begin compound symbol do_func3
+MSG: parser.y: yyparse:209: begin func def: NOTHING do_func3
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:211: begin func body
+MSG: parser.y: yyparse:248: empty function body
+MSG: parser.y: yyparse:213: end func body
 
-MSG: parser.y: yyparse:511: NOTHING type specifier
-MSG: parser.y: yyparse:189: begin compound symbol do_func4
-MSG: parser.y: yyparse:200: begin func def: NOTHING do_func4
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:202: begin func body
-MSG: parser.y: yyparse:239: empty function body
-MSG: parser.y: yyparse:204: end func body
+MSG: parser.y: yyparse:520: NOTHING type specifier
+MSG: parser.y: yyparse:198: begin compound symbol do_func4
+MSG: parser.y: yyparse:209: begin func def: NOTHING do_func4
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:211: begin func body
+MSG: parser.y: yyparse:248: empty function body
+MSG: parser.y: yyparse:213: end func body
 
-MSG: parser.y: yyparse:189: begin compound symbol test_func
-MSG: parser.y: yyparse:200: begin func def: INT test_func
-MSG: parser.y: yyparse:215: empty function decl list
-MSG: parser.y: yyparse:202: begin func body
-MSG: parser.y: yyparse:234: 
+MSG: parser.y: yyparse:198: begin compound symbol test_func
+MSG: parser.y: yyparse:209: begin func def: INT test_func
+MSG: parser.y: yyparse:224: empty function decl list
+MSG: parser.y: yyparse:211: begin func body
+MSG: parser.y: yyparse:243: 
 open function context
-MSG: parser.y: yyparse:315: var definition: INT var
-MSG: parser.y: yyparse:303: expression assignment item
-MSG: parser.y: yyparse:443: begin switch/case statement
-MSG: parser.y: yyparse:377: begin comparison expression
-MSG: parser.y: yyparse:189: begin compound symbol var
-MSG: parser.y: yyparse:379: end comparison expression
-MSG: parser.y: yyparse:459: begin case clause/case constant
-MSG: parser.y: yyparse:234: 
+MSG: parser.y: yyparse:324: var definition: INT var
+MSG: parser.y: yyparse:312: expression assignment item
+MSG: parser.y: yyparse:452: begin switch/case statement
+MSG: parser.y: yyparse:386: begin comparison expression
+MSG: parser.y: yyparse:198: begin compound symbol var
+MSG: parser.y: yyparse:388: end comparison expression
+MSG: parser.y: yyparse:468: begin case clause/case constant
+MSG: parser.y: yyparse:243: 
 open function context
-MSG: parser.y: yyparse:189: begin compound symbol do_func1
-MSG: parser.y: yyparse:477: func call to do_func1
-MSG: parser.y: yyparse:485: blank function call parameters
-MSG: parser.y: yyparse:479: end func call
-MSG: parser.y: yyparse:236: 
+MSG: parser.y: yyparse:198: begin compound symbol do_func1
+MSG: parser.y: yyparse:486: func call to do_func1
+MSG: parser.y: yyparse:494: blank function call parameters
+MSG: parser.y: yyparse:488: end func call
+MSG: parser.y: yyparse:245: 
 close function context
-MSG: parser.y: yyparse:461: end case clause
-MSG: parser.y: yyparse:459: begin case clause/case constant
-MSG: parser.y: yyparse:234: 
+MSG: parser.y: yyparse:470: end case clause
+MSG: parser.y: yyparse:468: begin case clause/case constant
+MSG: parser.y: yyparse:243: 
 open function context
-MSG: parser.y: yyparse:189: begin compound symbol do_func2
-MSG: parser.y: yyparse:477: func call to do_func2
-MSG: parser.y: yyparse:485: blank function call parameters
-MSG: parser.y: yyparse:479: end func call
-MSG: parser.y: yyparse:236: 
+MSG: parser.y: yyparse:198: begin compound symbol do_func2
+MSG: parser.y: yyparse:486: func call to do_func2
+MSG: parser.y: yyparse:494: blank function call parameters
+MSG: parser.y: yyparse:488: end func call
+MSG: parser.y: yyparse:245: 
 close function context
-MSG: parser.y: yyparse:461: end case clause
-MSG: parser.y: yyparse:459: begin case clause/case constant
-MSG: parser.y: yyparse:234: 
+MSG: parser.y: yyparse:470: end case clause
+MSG: parser.y: yyparse:468: begin case clause/case constant
+MSG: parser.y: yyparse:243: 
 open function context
-MSG: parser.y: yyparse:189: begin compound symbol do_func3
-MSG: parser.y: yyparse:477: func call to do_func3
-MSG: parser.y: yyparse:485: blank function call parameters
-MSG: parser.y: yyparse:479: end func call
-MSG: parser.y: yyparse:236: 
+MSG: parser.y: yyparse:198: begin compound symbol do_func3
+MSG: parser.y: yyparse:486: func call to do_func3
+MSG: parser.y: yyparse:494: blank function call parameters
+MSG: parser.y: yyparse:488: end func call
+MSG: parser.y: yyparse:245: 
 close function context
-MSG: parser.y: yyparse:461: end case clause
-MSG: parser.y: yyparse:445: end switch/case statement
-MSG: parser.y: yyparse:236: 
+MSG: parser.y: yyparse:470: end case clause
+MSG: parser.y: yyparse:454: end switch/case statement
+MSG: parser.y: yyparse:245: 
 close function context
-MSG: parser.y: yyparse:204: end func body
+MSG: parser.y: yyparse:213: end func body
 
 MSG: parser.y: yyparse:71: program end
 
