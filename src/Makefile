@@ -1,58 +1,33 @@
-################################################################################
-#
-#	Make file for simple objects
-#
-################################################################################
-PLATNAME := $(shell uname)
-
-OBJS	=	ast.o \
-			errors.o \
-			nop.o \
-			memory.o \
-			symbols.o \
-			constants.o
-
-OBJS1	=	scanner.o \
-			parser.o
-
-SRCS	=	$(OBJS:.o=.c)
-SRCS1	=	$(OBJS1:.o=.c)
-HEADERS	=	$(OBJS:.o=.h)
-
 TARGET	=	nop
-DEPS	= 	$(TARGET).dep
+SRCS	=	main.c
+SRCS1	=	parser.c \
+			scanner.c
+OBJS	=	$(SRCS:.c=.o)
+OBJS1	=	$(SRCS1:.c=.o)
+CARGS	=	-g -O0 -Wall -Wextra -DPARSE_TRACE
+#CARGS	=	-O3 -Wall -Wextra
+INCDIRS	=	-I.
+LIBDIRS	=	-L.
+LIBS	=	-lreadline -lm
+CC		=	gcc
 
-CC		=	gcc # clang
-CARGS	=	-Wall -Wextra
-HSRC	= 	-I.
-
-# comment this out to disable messages
-DEBUG	=	-g -DPTRACE
-
-.PHONY: all pretty clean all_clean
+.PHONY: all clean cleanmake
 
 all: $(TARGET)
 
 .c.o:
-	$(CC) $(HSRC) $(CARGS) $(DEBUG) -c $< -o $@
+	$(CC) $(CARGS) $(INCDIRS) -c $< -o $@
 
 $(TARGET): $(OBJS1) $(OBJS)
-	$(CC) $(DEBUG) $(CARGS) -o $(TARGET) $(OBJS) $(OBJS1)
+	$(CC) $(CARGS) -o $(TARGET) $(OBJS) $(OBJS1) $(LIBS)
 
-parser.c parser.h: parser.y scanner.h
-	bison --report=lookahead -tvdo parser.c parser.y
+parser.c parser.h: parser.y
+	bison --report=all --graph=parser.dot -tvd --output=parser.c parser.y
 
 scanner.c: scanner.l parser.h scanner.h
 	flex -o scanner.c scanner.l
 
-pretty:
-	indent $(SRCS) $(HEADERS)
-	-rm -f *~
+remake: clean all
 
 clean:
-	-rm -f parser.output $(OBJS) $(OBJS1) *.bak *~
-
-allclean: clean
-	-rm -f scanner.c parser.c parser.h $(TARGET) $(DEPS)
-
--include $(DEPS)
+	-rm -f $(TARGET) $(OBJS) $(OBJS1) $(SRCS1) parser.h parser.output parser.dot

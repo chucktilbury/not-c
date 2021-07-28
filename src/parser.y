@@ -1,580 +1,429 @@
 /*
- * This is the complete grammar for the NOP programming language.
+ * ANSI C Yacc grammar
+ *
+ * (This Yacc file is accompanied by a matching Lex file.)
+ *
+ * In 1985, Jeff Lee published his Yacc grammar based on a draft version of
+ * the ANSI C standard, along with a supporting Lex specification. Tom
+ * Stockfisch reposted those files to net.sources in 1987; as mentioned in the
+ * answer to question 17.25 of the comp.lang.c FAQ, they used to be available
+ * from ftp.uu.net as usenet/net.sources/ansi.c.grammar.Z.
+ *
+ * The version you see here has been updated based on the 2011 ISO C standard.
+ * (The previous version's Lex and Yacc files for ANSI C9X still exist as
+ * archived copies.)
+ *
+ * This grammar assumes that translation phases 1..5 have already been
+ * completed, including preprocessing and _Pragma processing. The Lex rule for
+ * string literals will perform concatenation (translation phase 6).
+ * Transliteration of universal character names (\uHHHH or \UHHHHHHHH) must
+ * have been done by either the preprocessor or a replacement for the input()
+ * macro used by Lex (or the YY_INPUT function used by Flex) to read
+ * characters. Although comments should have been changed to space characters
+ * during translation phase 3, there are Lex rules for them anyway.
+ *
+ * I want to keep this version as close to the current C Standard grammar as
+ * possible; please let me know if you discover discrepancies.
+ * (There is an FAQ for this grammar that you might want to read first.)
+ *
+ * jutta@pobox.com, 2012
+ *
+ * Last edit: 2012-12-18 DAGwyn@aol.com
+ * Note: There are two shift/reduce conflicts, correctly resolved by default:
+ *
+ *   IF '(' expression ')' statement _ ELSE statement
+ *
+ * and
+ *
+ *   ATOMIC _ '(' type_name ')'
+ *
+ * where "_" has been used to flag the points of ambiguity.
+ *
+ * *****************************************************************************
+ *
+ * This grammar is modified to match the NOP grammar. The NOP language is very
+ * similar to C, but there are significant differences in the way that block
+ * syntax works.
+ *
+ * For example:
+ *  - All blocks are enclosed in "{}", including "else" clauses.
+ *  - Else clause accepts the same parameters are an if and if can be defined
+ *    with no expression. While, if, for, and others defined with an empty or
+ *    absent expression are taken to be true.
+ *  - String and bool are first class types.
+ *  - String formatting is a language feature, not a library routine.
+ *  - Structs can have methods and struct members are local to methods defined
+ *    in a struct.
+ *  - Structs have constructors and destructors.
+ *  - Name spaces are supported and used to "import" symbols.
+ *  - Method parameter overloading is supported for methods.
+ *  - Methods must be defined as struct members.
+ *  - No global data definitions are allowed and all struct definitions are
+ *    global.
+ * This is not a comprehensive list of differences, but it's a good start on
+ * one. See the tests directory for examples.
+ *
  */
 
+%{
+#include <stdio.h>
+#include <stdint.h>
+#include "scanner.h"
+
+#ifdef PARSE_TRACE
+#define OSTR stderr
+extern int verbosity;
+extern int line_no, col_no;
+#define PTRACE(v,fmt,...) do{ \
+    if(verbosity >= (v)) { \
+    fprintf(OSTR, ">>>>>>>>>> PTRACE: %d: %d: %d: ", __LINE__, line_no, col_no); \
+    fprintf(OSTR, fmt, ##__VA_ARGS__); \
+    fprintf(OSTR,"\n");}}while(0)
+#else
+#define PTRACE(v,fmt,...)
+#endif
+
+%}
 %debug
 %defines
 %locations
-
-%{
-
-#include "common.h"
-#include "scanner.h"
-#include "symbols.h"
-#include "constants.h"
-#include "ast.h"
-
-#define TOKSTR get_tok_str()
-
-%}
 %define parse.error verbose
-%locations
 
 %union {
-    int type;
-    int scope;
-    symbol_t* symbol;
-    constant_t* constant;
-    compound_name_t* compound;
+    const char* identifier;
+    const char* str_literal;
+    const char* type_name;
+    unsigned long uint_literal;
+    long int_literal;
+    double float_literal;
 };
 
-    // TODO:
-    //  function overloads (name mangling)
-    //  import feature
-    //  "external" keyword to call an external library routine
-    //  inline keyword and functionality (in scanner)
-    //  support for non-local goto for iterators
-    //  exceptions, strings only...
-    //  multi-dimensional lists and dicts
-    //  lists and dicts hold any type, incl lists and dicts
+%token <identifier> IDENTIFIER TYPEDEF_NAME
+%token <int_literal> I_CONSTANT B_CONSTANT
+%token <uint_literal> U_CONSTANT
+%token <float_literal> F_CONSTANT
+%token <str_literal> STRING_LITERAL
 
+%token  LE_OP GE_OP EQ_OP NE_OP
+%token  AND_OP OR_OP
+%token  MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
+%token  SUB_ASSIGN ADD_ASSIGN
 
-%token <constant> FPCONST INTCONST UINTCONST STRCONST BOOLCONST
-%token <symbol> SYMBOL
-%token <type> DICT LIST BOOL STRING FLOAT INT UINT NOTHING
+%token  BOOL INT UINT FLOAT STRING NOTHING LIST DICT
+%token  CONST STRUCT CTOR DTOR ENTRY
 
-%type <type> type_specifier compound_type
-%type <constant> expression constant
-%type <scope> scope_specifier
-%type <compound> compound_name init_preamble
-
-%token SWITCH CASE DEFAULT RETURN PUBLIC PRIVATE
-%token IF ELSE WHILE DO BREAK CONTINUE NAMESPACE
-%token AND OR NOT EQ NEQ LTE GTE LT GT
-%token ENTRY EXIT CONST STRUCT INIT DEINIT
-%token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
-
-    // not returned by the scanner
-%token USR_TYPE
+%token  CASE DEFAULT IF ELSE SWITCH WHILE DO FOR CONTINUE BREAK RETURN
+%token  NAMESPACE IMPORT PUBLIC PRIVATE
 
 %right '='
 %right ADD_ASSIGN SUB_ASSIGN
 %right MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
-%left AND OR
-%left EQ NEQ
-%left LT GT LTE GTE
-%right ':'
+%left OR_OP
+%left AND_OP
+%left EQ_OP NE_OP
+%left '>' '<' LE_OP GE_OP
 %left '+' '-'
 %left '*' '/' '%'
 %left NEG
 %right NOT
-
-%%
-    /*
-        Module rules.
-     */
-program:
-        {
-            PARSER_TRACE("program begin");
-        } all_module {
-            PARSER_TRACE("program end\n");
-        }
-    ;
-
-all_module: module_list
-    ;
-
-module_list:
-      module_element {}
-    | module_list module_element {}
-    ;
-
-module_element:
-      struct_definition {}
-    | func_definition {}
-    | namespace_definition {}
-    | ';' // ignore extra no-op statements at module level
-    ;
-
-namespace_definition:
-      NAMESPACE SYMBOL {
-            PARSER_TRACE("begin namespace definition: %s", $2->name);
-        } '{' module_list '}' {
-            PARSER_TRACE("end namespace definition");
-        }
-    ;
-
-struct_definition:
-      STRUCT SYMBOL {
-            PARSER_TRACE("begin struct definition: %s", $2->name);
-        } '{' struct_list '}' {
-            PARSER_TRACE("end of struct definition\n");
-        }
-    ;
-
-struct_list:
-      struct_element {}
-    | struct_list struct_element {}
-    ;
-
-struct_element:
-      var_declaration {}
-    | func_declaration {}
-    | ';' // allow no-op statements in a struct
-    ;
-
-
-scope_specifier:
-      /* blank specifier */ { $$ = PRIVATE; }
-    | PUBLIC {}
-    | PRIVATE {}
-    ;
-
-var_declaration:
-      scope_specifier CONST compound_type SYMBOL {
-            PARSER_TRACE("var declaration: %s CONST %s %s",TOK_TOSTR($1),TOK_TOSTR($3),$4->name);
-        }
-    | scope_specifier compound_type SYMBOL {
-            PARSER_TRACE("var declaration: %s %s %s",TOK_TOSTR($1),TOK_TOSTR($2),$3->name);
-        }
-    | scope_specifier compound_type LIST SYMBOL {
-            PARSER_TRACE("var declaration: %s %s LIST %s",TOK_TOSTR($1),TOK_TOSTR($2),$4->name);
-        }
-    | scope_specifier compound_type DICT SYMBOL {
-            PARSER_TRACE("var declaration: %s %s DICT %s",TOK_TOSTR($1),TOK_TOSTR($2),$4->name);
-        }
-    ;
-
-init_preamble:
-      compound_name '.' {
-            PARSER_TRACE("(de)init for class: %s", $1->name);
-        }
-    ;
-
-func_declaration:
-      scope_specifier compound_type SYMBOL {
-            PARSER_TRACE("begin func decl: %s %s %s",TOK_TOSTR($1),TOK_TOSTR($2),$3->name);
-        } '(' func_def_parms ')' {
-            PARSER_TRACE("end func declaration\n");
-        }
-    | scope_specifier compound_type LIST SYMBOL {
-            PARSER_TRACE("begin func decl: %s %s LIST %s",TOK_TOSTR($1),TOK_TOSTR($2),$4->name);
-        } '(' func_def_parms ')' {
-            PARSER_TRACE("end func declaration\n");
-        }
-    | scope_specifier compound_type DICT SYMBOL {
-            PARSER_TRACE("begin func decl: %s %s DICT %s",TOK_TOSTR($1),TOK_TOSTR($2),$4->name);
-        }'(' func_def_parms ')' {
-            PARSER_TRACE("end func declaration\n");
-        }
-    | INIT {
-            PARSER_TRACE("begin init func def");
-        } '(' func_def_parms ')' {
-            PARSER_TRACE("end init func def\n");
-        }
-    | DEINIT '(' ')' {
-            PARSER_TRACE("deinit func def");
-        }
-    | DEINIT {
-            PARSER_TRACE("deinit func def");
-        }
-    | error
-    ;
-
-compound_name:
-      SYMBOL {
-            PARSER_TRACE("begin compound symbol %s", $1->name);
-            $$ = create_compound($1->name);
-        }
-    | compound_name '.' SYMBOL {
-            PARSER_TRACE("add to compound symbol %s", $3->name);
-            add_compound($1, $3->name);
-        }
-    ;
-
-func_definition:
-      compound_type compound_name {
-            PARSER_TRACE("begin func def: %s %s", TOK_TOSTR($1), $2->name);
-        } '(' func_def_parms ')' {
-            PARSER_TRACE("begin func body");
-        } func_body {
-            PARSER_TRACE("end func body\n");
-        }
-    | ENTRY {
-            PARSER_TRACE("begin entry body def");
-        } func_body {
-            PARSER_TRACE("end entry body def");
-        }
-    | init_preamble INIT {
-            PARSER_TRACE("begin init definition for class: %s", $1->name);
-        } '(' func_def_parms ')' {
-            PARSER_TRACE("begin func body");
-        } func_body {
-            PARSER_TRACE("end func body\n");
-        }
-    | init_preamble DEINIT {
-            PARSER_TRACE("begin deinit definition for class: %s", $1->name);
-            PARSER_TRACE("begin func body");
-        } func_body {
-            PARSER_TRACE("end func body\n");
-        }
-    | init_preamble DEINIT {
-        } '(' ')' {
-            PARSER_TRACE("begin deinit definition for class: %s", $1->name);
-            PARSER_TRACE("begin func body");
-        } func_body {
-            PARSER_TRACE("end func body\n");
-        }
-    | error
-    ;
-
-func_def_parms_items:
-      /* empty */ { PARSER_TRACE("empty function decl list"); }
-    | compound_type SYMBOL {
-            PARSER_TRACE("func parameter def: %s %s", TOK_TOSTR($1), $2->name);
-        }
-    | compound_type LIST SYMBOL {
-            PARSER_TRACE("func parameter def: %s LIST %s", TOK_TOSTR($1), $3->name);
-        }
-    | compound_type DICT SYMBOL {
-            PARSER_TRACE("func parameter def: %s DICT %s", TOK_TOSTR($1), $3->name);
-        }
-    ;
-
-func_def_parms:
-      func_def_parms_items {}
-    | func_def_parms ',' func_def_parms_items {}
-    ;
-
-func_body:
-      '{' {
-            PARSER_TRACE("\nopen function context");
-        } func_body_list '}' {
-            PARSER_TRACE("\nclose function context");
-        }
-    | '{' '}' {
-            PARSER_TRACE("empty function body");
-        }
-    ;
-
-func_body_list:
-      func_body_element {}
-    | func_body_list func_body_element {}
-    ;
-
-list_initializer:
-      '[' ']' {
-            PARSER_TRACE("empty list initializer");
-        }
-    | '[' list_initializer_list ']' {
-            PARSER_TRACE("list initializer with data");
-        }
-    | compound_name {
-            PARSER_TRACE("list initializer with compound symbol: %s",$1->name);
-        }
-    ;
-
-list_initializer_list:
-      assignment_item {
-            PARSER_TRACE("begin list assignment list");
-        }
-    | list_initializer_list ',' assignment_item {
-            PARSER_TRACE("add list assignment list");
-        }
-    ;
-
-dict_initializer_item:
-      SYMBOL '=' expression {
-            PARSER_TRACE("dict initializer: %s expression", $1->name);
-        }
-    | SYMBOL '=' formatted_string {
-            PARSER_TRACE("dict initializer: %s formatted string", $1->name);
-        }
-    ;
-
-dict_initializer_list:
-      dict_initializer_item {
-            PARSER_TRACE("begin dict assignment list");
-        }
-    | dict_initializer_list ',' dict_initializer_item {
-            PARSER_TRACE("add dict assignment list");
-        }
-    ;
-
-dict_initializer:
-      '[' ']' {
-            PARSER_TRACE("empty dict initializer");
-        }
-    | '[' dict_initializer_list ']' {
-            PARSER_TRACE("dict initalizer with data");
-        }
-    | compound_name {
-            PARSER_TRACE("dict initialzer with compound symbol: %s", $1->name);
-        }
-    ;
-
-assignment_item:
-      expression {
-            PARSER_TRACE("expression assignment item");
-        }
-    | formatted_string {
-            PARSER_TRACE("formatted string assignment item");
-        }
-    ;
-
-var_definition:
-      compound_type SYMBOL {
-            PARSER_TRACE("var definition: %s %s", TOK_TOSTR($1), $2->name);
-        }
-    ;
-
-list_definition:
-      compound_type LIST SYMBOL {
-            PARSER_TRACE("var definition: %s LIST %s", TOK_TOSTR($1), $3->name);
-        }
-    ;
-
-dict_definition:
-      compound_type DICT SYMBOL {
-            PARSER_TRACE("var definition: %s DICT %s", TOK_TOSTR($1), $3->name);
-        }
-    ;
-
-func_body_element:
-      var_definition {}
-    | var_definition '=' assignment_item {}
-    | compound_name '=' assignment_item {}
-    | list_definition '=' list_initializer {}
-    | list_definition {}
-    | dict_definition '=' dict_initializer {}
-    | dict_definition {}
-    | list_reference '=' assignment_item {}
-    | dict_reference '=' assignment_item {}
-    | func_call {}
-    | while_statement {}
-    | do_statement {}
-    | if_statement {}
-    | switch_statement {}
-    | func_body {}
-    | RETURN expression {
-            PARSER_TRACE("return expression");
-        }
-    | EXIT expression {
-            PARSER_TRACE("exit expression");
-        }
-    | BREAK {}
-    | CONTINUE {}
-    | ';' // allow extra no-op statements in a func
-    ;
-
-comparison_expr:
-      '(' {
-            PARSER_TRACE("begin comparison expression");
-        } expression ')' {
-            PARSER_TRACE("end comparison expression");
-        }
-    | '(' ')' {
-            PARSER_TRACE("blank comparison expression");
-        }
-    ;
-
-while_statement:
-      WHILE comparison_expr {
-            PARSER_TRACE("begin while loop body\nopen local context");
-        } func_body {
-            PARSER_TRACE("end while loop body\nclose local context");
-        }
-    ;
-
-do_statement:
-      DO {
-            PARSER_TRACE("begin do loop body\nopen local context");
-        } func_body {
-            PARSER_TRACE("end do loop body\nclose local context");
-        } WHILE comparison_expr
-    ;
-
-if_introduction:
-      IF {
-            PARSER_TRACE("begin if clause");
-        } comparison_expr {
-            PARSER_TRACE("begin if func body\nopen local context");
-        }
-    ;
-
-if_statement:
-      if_introduction func_body {
-            PARSER_TRACE("end if func body (no else)\nclose local context");
-        }
-    | if_introduction func_body {
-            PARSER_TRACE("end if func body (with else)\nclose local context");
-        } else_clause_list {
-            PARSER_TRACE("end if/else clause\nclose local context");
-        }
-    ;
-
-else_clause:
-      ELSE {
-            PARSER_TRACE("begin else clause (with expression)");
-        } comparison_expr {
-            PARSER_TRACE("begin else func body\nopen local context");
-        } func_body {
-            PARSER_TRACE("end else func body\nclose local context");
-        }
-    | ELSE {
-            PARSER_TRACE("begin else clause (no expression)\nopen local context");
-        } func_body {
-            PARSER_TRACE("end else func body\nclose local context");
-        }
-    ;
-
-else_clause_list:
-      else_clause {}
-    | else_clause_list else_clause {}
-    ;
-
-switch_statement:
-      SWITCH {
-            PARSER_TRACE("begin switch/case statement");
-        } comparison_expr '{' case_clause '}' {
-            PARSER_TRACE("end switch/case statement");
-        }
-    ;
-
-default_clause:
-      DEFAULT {
-            PARSER_TRACE("begin default clause");
-        } func_body {
-            PARSER_TRACE("end default clause");
-        }
-    ;
-
-case_base:
-      CASE '(' constant ')' {
-            PARSER_TRACE("begin case clause/case constant");
-        } func_body {
-            PARSER_TRACE("end case clause");
-        }
-    ;
-
-case_clause:
-      case_clause_list {}
-    | case_clause_list default_clause {}
-    ;
-
-case_clause_list:
-      case_base {}
-    | case_clause_list case_base {}
-    ;
-
-func_call:
-      compound_name {
-            PARSER_TRACE("func call to %s", $1->name);
-        } '(' fcall_list ')' {
-            PARSER_TRACE("end func call");
-        }
-    ;
-
-fcall_list:
-      /* can be blank */ {
-            PARSER_TRACE("blank function call parameters");
-        }
-    | fcall_list_element {}
-    | fcall_list ',' fcall_list_element {}
-    ;
-
-fcall_list_element:
-      expression {
-            PARSER_TRACE("func call expression parameter");
-        }
-    | formatted_string {
-            PARSER_TRACE("func call formatted string parameter");
-        }
-    ;
-
-formatted_string:
-      STRCONST {}
-    | STRCONST '(' expression_list ')' {}
-    ;
-
-compound_type:
-      type_specifier { $$ = $1; }
-    | compound_name { $$ = USR_TYPE; }
-    ;
-
-type_specifier:
-      STRING {  }
-    | FLOAT  {  }
-    | INT    {  }
-    | UINT   {  }
-    | BOOL   {  }
-    | NOTHING { PARSER_TRACE("NOTHING type specifier"); }
-    ;
-
-list_reference:
-      compound_name '[' expression ']' {}
-    ;
-
-dict_reference:
-      compound_name '[' formatted_string ']' {}
-    ;
-
-constant:
-      FPCONST {  }
-    | INTCONST {  }
-    | UINTCONST {  }
-    | BOOLCONST { }
-    | NOTHING { PARSER_TRACE("NOTHING CONSTANT"); }
-    ;
-
-expression_factor:
-      constant { }
-    | compound_name { }
-    | list_reference {}
-    | dict_reference {}
-    | func_call {}
-    ;
-
-expression:
-      expression_factor {}
-    | expression '+' expression {  }
-    | expression '-' expression {  }
-    | expression '*' expression {  }
-    | expression '/' expression {  }
-    | expression '%' expression {  }
-    | expression EQ expression {  }
-    | expression NEQ expression {  }
-    | expression LT expression {  }
-    | expression GT expression {  }
-    | expression LTE expression {  }
-    | expression GTE expression {  }
-    | expression AND expression {  }
-    | expression OR expression {  }
-    | '-' expression %prec NEG  {  }
-    | NOT expression {  }
-    | type_specifier ':' SYMBOL  {  }
-    | SYMBOL ADD_ASSIGN expression {}
-    | SYMBOL SUB_ASSIGN expression {}
-    | SYMBOL MUL_ASSIGN expression {}
-    | SYMBOL DIV_ASSIGN expression {}
-    | SYMBOL MOD_ASSIGN expression {}
-    | '(' expression ')' {}
-    ;
-
-expression_list:
-      expression {}
-    | expression_list ',' expression {}
-    ;
+%left ':'  // typecast
 
 %%
 
+translation_unit
+    : translation_unit_item
+    | translation_unit translation_unit_item
+    ;
+
+translation_unit_item
+    : namespace
+    | IMPORT formatted_string
+    | ENTRY method_body
+    ;
+
+namespace
+    : NAMESPACE IDENTIFIER '{' namespace_item_list '}'
+    ;
+
+namespace_item
+    : public_or_private struct_declaration
+    | public_or_private method_definition
+    | public_or_private variable_definition
+    ;
+
+namespace_item_list
+    : namespace_item
+    | namespace_item_list namespace_item
+    ;
+
+formatted_string
+    : STRING_LITERAL
+    | STRING_LITERAL '(' ')'
+    | STRING_LITERAL '(' expression_list ')'
+    ;
+
+identifier_parameter_list
+    : identifier_parameter
+    | identifier_parameter_list identifier_parameter
+    ;
+
+identifier_parameter
+    : '(' ')'
+    | '(' expression_list ')'
+    | '[' expression ']'
+    ;
+
+identifier
+    : IDENTIFIER
+    | IDENTIFIER identifier_parameter_list
+    ;
+
+compound_identifier
+    : IDENTIFIER
+    | compound_identifier '.' IDENTIFIER
+    ;
+
+compound_name
+    : identifier
+    | compound_name '.' identifier
+    ;
+
+type_name
+    : BOOL
+    | INT
+    | UINT
+    | FLOAT
+    | STRING
+    | NOTHING
+    | TYPEDEF_NAME
+    ;
+
+list_or_dict
+    : LIST
+    | DICT
+    ;
+
+type_specifier
+    : type_name
+    | CONST type_name
+    | CONST type_name list_or_dict
+    | type_name list_or_dict
+    ;
+
+primary_expression
+    : I_CONSTANT
+    | U_CONSTANT
+    | F_CONSTANT
+    | B_CONSTANT
+    | formatted_string
+    | compound_name
+    ;
+
+expression
+    : primary_expression
+    | expression '+' expression
+    | expression '-' expression
+    | expression '*' expression
+    | expression '/' expression
+    | expression '%' expression
+    | expression EQ_OP expression
+    | expression NE_OP expression
+    | expression '<' expression
+    | expression '>' expression
+    | expression LE_OP expression
+    | expression GE_OP expression
+    | expression AND_OP expression
+    | expression OR_OP expression
+    | '-' expression %prec NEG
+    | NOT expression
+    | type_specifier '(' expression ')'
+    | '(' expression ')'
+    ;
+
+assignment_expression
+    : compound_name ADD_ASSIGN expression
+    | compound_name SUB_ASSIGN expression
+    | compound_name MUL_ASSIGN expression
+    | compound_name DIV_ASSIGN expression
+    | compound_name MOD_ASSIGN expression
+    ;
+
+expression_list
+    : expression
+    | expression_list ',' expression
+    ;
+
+public_or_private
+    : PUBLIC
+    | PRIVATE
+    |
+    ;
+
+struct_declaration
+    : STRUCT IDENTIFIER '{' struct_list '}'
+    ;
+
+struct_item
+    : public_or_private variable_declaration
+    | public_or_private method_declaration
+    | CTOR '(' method_declaration_parameters ')'
+    | CTOR '(' ')'
+    | DTOR
+    ;
+
+struct_list
+    : struct_item
+    | struct_list struct_item
+    ;
+
+variable_declaration
+    : type_specifier IDENTIFIER
+    ;
+
+method_declaration
+    : type_specifier IDENTIFIER '(' method_declaration_parameters ')'
+    | type_specifier IDENTIFIER '(' ')'
+    ;
+
+method_declaration_parameters
+    : variable_declaration
+    | method_declaration_parameters ',' variable_declaration
+    ;
+
+method_definition
+    : type_specifier compound_identifier '(' method_declaration_parameters ')' method_body
+    | type_specifier compound_identifier '(' ')' method_body
+    | compound_identifier '.' CTOR '(' method_declaration_parameters ')' method_body
+    | compound_identifier '.' CTOR '(' ')' method_body
+    | compound_identifier '.' DTOR method_body
+    ;
+
+method_body
+    : '{' '}'
+    | '{' method_body_list '}'
+    ;
+
+method_body_item
+    : variable_definition
+    | if_clause
+    | while_clause
+    | do_clause
+    | for_clause
+    | switch_clause
+    | assignment
+    | assignment_expression
+    | compound_name
+    | BREAK
+    | CONTINUE
+    | RETURN expression
+    | method_body
+    ;
+
+method_body_list
+    : method_body_item
+    | method_body_list method_body_item
+    ;
+
+dict_init_element
+    : IDENTIFIER '=' expression
+    ;
+
+dict_init_list
+    : dict_init_element
+    | dict_init_list ',' dict_init_element
+    ;
+
+list_init
+    : '[' expression_list ']'
+    | '[' dict_init_list ']'
+    ;
+
+variable_definition
+    : variable_declaration
+    | variable_declaration '=' expression
+    | variable_declaration '=' list_init
+    ;
+
+if_clause
+    : IF '(' expression ')' method_body
+    | IF '(' expression ')' method_body else_clause_list
+    | IF '(' expression ')' method_body final_else
+    | IF '(' expression ')' method_body else_clause_list final_else
+    ;
+
+else_clause
+    : ELSE '(' expression ')' method_body
+    ;
+
+else_clause_list
+    : else_clause
+    | else_clause_list else_clause
+    ;
+
+final_else
+    : ELSE method_body
+    | ELSE '(' ')' method_body
+    ;
+
+while_clause
+    : WHILE '(' expression ')' method_body
+    | WHILE '(' ')' method_body
+    | WHILE method_body
+    ;
+
+do_clause
+    : DO method_body WHILE '(' expression ')'
+    | DO method_body WHILE '(' ')'
+    ;
+
+for_init
+    : variable_definition
+    | IDENTIFIER
+    ;
+
+for_clause
+    : FOR '(' for_init ';' expression ';' expression ')' method_body
+    | FOR '(' ';' expression ';' expression ')' method_body
+    | FOR '(' for_init ';' expression ';' ')' method_body
+    | FOR '(' ';' expression ';' ')' method_body
+    ;
+
+case_clause
+    : CASE '(' primary_expression ')' method_body
+    ;
+
+case_clause_list
+    : case_clause
+    | case_clause_list case_clause
+    ;
+
+final_case_clause
+    : CASE method_body
+    | CASE '(' ')' method_body
+    | DEFAULT method_body
+    ;
+
+switch_clause
+    : SWITCH '(' expression ')' '{' case_clause_list '}'
+    | SWITCH '(' expression ')' '{' case_clause_list final_case_clause '}'
+    ;
+
+assignment
+    : compound_name '=' expression
+    ;
+
+%%
 #include <stdio.h>
 
+// defined in scanner.l
+extern int col_no;
+extern int line_no;
 extern char yytext[];
 
-void yyerror(const char* s)
+void yyerror(const char *s)
 {
-    fflush(stderr);
-    fprintf(stderr, "Syntax Error: %s: line %d: at %d: %s\n", get_file_name(), get_line_number(), get_col_number(), s);
-    inc_error_count();
+    fflush(stdout);
+    //fprintf(stderr, "*** %s\n", s);
+    //fprintf(stderr, "%s\n%*s\nsyntax error: %d: %s\n", yytext, col_no, "^", line_no, s);
+    fprintf(stderr, "syntax error: %d: %d: %s\n", line_no, col_no, s);
 }

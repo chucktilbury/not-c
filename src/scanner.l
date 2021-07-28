@@ -1,366 +1,395 @@
+/*
+ * ANSI C grammar, Lex specification
+ *
+ * (This Lex file is accompanied by a matching Yacc file.)
+ *
+ * In 1985, Jeff Lee published his Yacc grammar based on a draft version of
+ * the ANSI C standard, along with a supporting Lex specification. Tom
+ * Stockfisch reposted those files to net.sources in 1987; as mentioned in the
+ * answer to question 17.25 of the comp.lang.c FAQ, they used to be available
+ * from ftp.uu.net as usenet/net.sources/ansi.c.grammar.Z.
+ *
+ * The version you see here has been updated based on the 2011 ISO C standard.
+ * (The previous version's Lex and Yacc files for ANSI C9X still exist as
+ * archived copies.)
+ *
+ * It is assumed that translation phases 1..5 have already been completed,
+ * including preprocessing and _Pragma processing. The Lex rule for string
+ * literals will perform concatenation (translation phase 6). Transliteration
+ * of universal character names (\uHHHH or \UHHHHHHHH) must have been done by
+ * either the preprocessor or a replacement for the input() macro used by Lex
+ * (or the YY_INPUT function used by Flex) to read characters. Although
+ * comments should have been changed to space characters during translation
+ * phase 3, there are Lex rules for them anyway.
+ *
+ * I want to keep this version as close to the current C Standard grammar as
+ * possible; please let me know if you discover discrepancies.
+ *
+ * (There is an FAQ for this grammar that you might want to read first.)
+ *
+ * jutta@pobox.com, 2012
+ *
+ * Last edit: 2012-12-19 DAGwyn@aol.com
+ * Note: The following %-parameters are the minimum sizes needed for real Lex.
+ * %e   number of parsed tree nodes
+ * %p   number of positions
+ * %n   number of states
+ * %k   number of packed character classes
+ * %a   number of transitions
+ * %o   size of output array
+ *
+ * %e  1019
+ * %p  2807
+ * %n  371
+ * %k  284
+ * %a  1213
+ * %o  1117
+ *
+ */
+
+O   [0-7]
+D   [0-9]
+NZ  [1-9]
+L   [a-zA-Z_]
+A   [a-zA-Z_0-9]
+H   [a-fA-F0-9]
+HP  (0[xX])
+E   ([Ee][+-]?{D}+)
+P   ([Pp][+-]?{D}+)
+FS  (f|F|l|L)
+IS  (((u|U)(l|L|ll|LL)?)|((l|L|ll|LL)(u|U)?))
+CP  (u|U|L)
+SP  (u8|u|U|L)
+ES  (\\(['"\?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F0-9]+))
+WS  [ \t\v\n\f]
 
 %{
-//#undef //_DEBUGGING
-//#undef //_TRACE
-//#define //_TRACE(...)
-
-#include "common.h"
-#include "constants.h"
-#include "symbols.h"
-#include "parser.h"
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wimplicit-function-declaration"
+#pragma GCC diagnostic ignored "-Wunused-function"
 
-// maximum depth of imports prevents crashing from circular imports.
-//static int import_depth = 0;
-//#define MAX_IMPORTS 15
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "parser.h"
 
-// string buffer to get token from
-static char strbuf[1024*64];
+extern void yyerror(const char *);  /* prints grammar violation message */
 
-typedef struct _file_name_stack {
-    int line_no;
-    int col_no;
-    char *name;
-    struct _file_name_stack *next;
-} _file_name_stack;
+extern int sym_type(const char *);  /* returns type from symbol table */
 
-void count(void);
-static char buffer[1024*64];
-static int bidx = 0;
-static _file_name_stack *name_stack;
-int num_errors = 0; // global updated by parser
+#define sym_type(identifier) IDENTIFIER /* with no symbol table, fake it */
 
-// these funcs support the string scanner
-static void __append_char(char ch) {
-    if((sizeof(buffer)-1) > (size_t)bidx) {
-        buffer[bidx] = ch;
-        bidx++;
-    }
-    else {
-        fatal_error("buffer overrun");
-        //fprintf(stderr, "scanner buffer overrun");
-        exit(1);
-    }
-}
+static int check_type(void);
 
-static void __append_str(char *str) {
-    if((sizeof(buffer)-1) > (strlen(buffer) + strlen(str))) {
-        strcat(buffer, str);
-        bidx = strlen(buffer);
-    }
-    else {
-        fatal_error("buffer overrun");
-        //fprintf(stderr, "scanner buffer overrun");
-        exit(1);
-    }
-}
+int col_no = 1;
+int line_no = 1;
 
 static void update_loc(void){
 
-    if(NULL != name_stack) {
-        yylloc.first_line   = name_stack->line_no;
-        yylloc.first_column = name_stack->col_no;
-    }
-    else
-        return;
+    yylloc.first_line   = line_no;
+    yylloc.first_column = col_no;
 
     for(char *s = yytext; *s != '\0'; s++) {
-        name_stack->col_no++;
+        col_no++;
     }
 
-    yylloc.last_line   = name_stack->line_no;
-    yylloc.last_column = name_stack->col_no-1;
+    yylloc.last_line   = line_no;
+    yylloc.last_column = col_no-1;
 }
 
 #define YY_USER_ACTION update_loc();
-//#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
+
+typedef struct {
+    size_t cap;
+    size_t len;
+    char* buf;
+} _str_buffer;
+
+_str_buffer* sbuf = NULL;
+
+void init_scanner(const char* fname) {
+
+    yyin = fopen(fname, "r");
+    if(yyin == NULL) {
+        fprintf(stderr, "Cannot open input file: %s: %s\n", fname, strerror(errno));
+        exit(1);
+    }
+
+    sbuf = malloc(sizeof(_str_buffer));
+    if(sbuf == NULL) {
+        fprintf(stderr, "out of memory!\n");
+        exit(1);
+    }
+    sbuf->cap = 0x01 << 3;
+    sbuf->len = 0;
+    sbuf->buf = malloc(sbuf->cap);
+    if(sbuf->buf == NULL) {
+        fprintf(stderr, "out of memory!\n");
+        exit(1);
+    }
+}
+
+void destroy_scanner() {
+
+    fclose(yyin);
+    if(sbuf != NULL) {
+        if(sbuf->buf != NULL)
+            free(sbuf->buf);
+        free(sbuf);
+    }
+}
+
+static void resize_str_buffer() {
+
+    if(sbuf != NULL) {
+        if(sbuf->len+2 >= sbuf->cap) {
+            sbuf->cap <<= 1;
+            sbuf->buf = realloc(sbuf->buf, sbuf->cap);
+            if(sbuf->buf == NULL) {
+                fprintf(stderr, "out of memory!\n");
+                exit(1);
+            }
+        }
+    }
+}
+
+static void add_char(int ch) {
+
+    resize_str_buffer();
+    sbuf->buf[sbuf->len] = (char)ch;
+    sbuf->buf[sbuf->len+1] = '\0';
+    sbuf->len++;
+}
+
+static void reset_buffer() {
+    sbuf->len = 0;
+}
+
+static void add_str(const char* str) {
+
+    // quick and dirty
+    for(int i = 0; str[i] != 0; i++)
+        add_char(str[i]);
+}
+
+static const char* dupstr(const char* str) {
+
+    size_t len = strlen(str) + 1;
+    const char* s = malloc(len);
+    memcpy((void*)s, str, len);
+    return s;
+}
+
 %}
 
-/* state definitions */
+%x COMMENT
 %x SQUOTES
 %x DQUOTES
-%x COMMENT
-%option noinput nounput
-%option yylineno
-%option noyywrap
+
 %%
-
-    /* overhead */
-\n              { name_stack->line_no++; name_stack->col_no=1; } // yylineno++; }
-[ \t\r]         {}
-
-    /* keywords */
-"string"        { yylval.type = STRING; return STRING; }
-"float"         { yylval.type = FLOAT; return FLOAT; }
-"int"           { yylval.type = INT; return INT; }
-"uint"          { yylval.type = UINT; return UINT; }
-"dict"          { yylval.type = DICT; return DICT; }
-"list"          { yylval.type = LIST; return LIST; }
-"bool"          { yylval.type = BOOL; return BOOL; }
-"nothing"       { yylval.type = NOTHING; return NOTHING; }
-"true"          { yylval.constant = make_bool_const(true); return BOOLCONST; }
-"false"         { yylval.constant = make_bool_const(false); return BOOLCONST; }
-"public"        { yylval.scope = PUBLIC; return PUBLIC; }
-"private"       { yylval.scope = PRIVATE; return PRIVATE; }
-
-"if"            { return IF; }
-"else"          { return ELSE; }
-"while"         { return WHILE; }
-"do"            { return DO; }
-"switch"        { return SWITCH; }
-"case"          { return CASE; }
-"break"         { return BREAK; }
-"continue"      { return CONTINUE; }
-"default"       { return DEFAULT; }
-"entry"         { return ENTRY; }
-"exit"          { return EXIT; }
-"init"          { return INIT; }
-"deinit"        { return DEINIT; }
-"return"        { return RETURN; }
-"const"         { return CONST; }
-"struct"        { return STRUCT; }
-"namespace"     { return NAMESPACE; }
-
-    /* boolean operator tokens composed of special characters */
-"and"           { return AND; }
-"or"            { return OR; }
-
-"not"           { return NOT; }
-"!"             { return NOT; }
-"equ"           { return EQ; }
-"=="            { return EQ; }
-"neq"           { return NEQ; }
-"!="            { return NEQ; }
-"leq"           { return LTE; }
-"<="            { return LTE; }
-"geq"           { return GTE; }
-">="            { return GTE; }
-"lt"            { return LT; }
-"<"             { return LT; }
-"gt"            { return GT; }
-">"             { return GT; }
-"+="            { return ADD_ASSIGN; }
-"-="            { return SUB_ASSIGN; }
-"*="            { return MUL_ASSIGN; }
-"/="            { return DIV_ASSIGN; }
-"%="            { return MOD_ASSIGN; }
-
-        /* arithmetic operators */
-"-"             { return '-'; }
-"+"             { return '+'; }
-"="             { return '='; }
-"/"             { return '/'; }
-"*"             { return '*'; }
-"%"             { return '%'; }
-
-        /* Other operators */
-","             { return ','; }
-";"             { /* ignore all */ }
-":"             { return ':'; }
-"["             { return '['; }
-"]"             { return ']'; }
-"{"             { return '{'; }
-"}"             { return '}'; }
-"("             { return '('; }
-")"             { return ')'; }
-"."             { return '.'; }
-
-    /* constructed tokens */
-
-    /* A simple symbol */
-[a-zA-Z_][a-zA-Z_0-9]* {
-        yylval.symbol = create_symbol(yytext);
-        //printf("SYMBOL: %s\n", yytext);
-        return SYMBOL;
-    }
 
     /* recognize and ignore comments */
 [/][*]+ { BEGIN(COMMENT); }
 <COMMENT>[*]+[/] { BEGIN(INITIAL); }
-<COMMENT>\n { name_stack->line_no++; yylineno++; }
+<COMMENT>\n { line_no++; yylineno++; }
 <COMMENT>.  {}  /* eat everything in between */
 
     /* eat up until the newline */
 [/][/].* { ;
     }
 
-[0-9]+ {
-        //yylval.literal.intval = strtol(yytext, NULL, 10);
-        yylval.constant = make_inum_const(strtol(yytext, NULL, 10));
-        return INTCONST;
+"float" {
+        yylval.type_name = dupstr(yytext);
+        return(FLOAT);
+    }
+"int" {
+        yylval.type_name = dupstr(yytext);
+        return(INT);
+    }
+"uint" {
+        yylval.type_name = dupstr(yytext);
+        return(UINT);
+    }
+"nothing" {
+        yylval.type_name = dupstr(yytext);
+        return(NOTHING);
+    }
+"bool" {
+        yylval.type_name = dupstr(yytext);
+        return BOOL;
+    }
+"string" {
+        yylval.type_name = dupstr(yytext);
+        return STRING;
     }
 
-    /* recognize a float */
-([0-9]*\.)?[0-9]+([Ee][-+]?[0-9]+)? {
-        //yylval.literal.fpval = strtod(yytext, NULL);
-        yylval.constant = make_fnum_const(strtod(yytext, NULL));
-        return FPCONST;
+"break"                 { return(BREAK); }
+"case"                  { return(CASE); }
+"const"                 { return(CONST); }
+"continue"              { return(CONTINUE); }
+"default"               { return(DEFAULT); }
+"do"                    { return(DO); }
+"else"                  { return(ELSE); }
+"for"                   { return(FOR); }
+"if"                    { return(IF); }
+"return"                { return(RETURN); }
+"struct"                { return(STRUCT); }
+"switch"                { return(SWITCH); }
+"while"                 { return(WHILE); }
+"namespace"             { return(NAMESPACE); }
+"import"                { return(IMPORT); }
+"ctor"                  { return(CTOR); }
+"dtor"                  { return(DTOR); }
+"entry"                 { return(ENTRY); }
+"list"                  { return(LIST); }
+"dict"                  { return(DICT); }
+"public"                { return(PUBLIC); }
+"private"               { return(PRIVATE); }
+
+"true" {
+        yylval.int_literal = 1;
+        return B_CONSTANT;
     }
 
-0[Xx][0-9a-fA-F]+ {
-        //yylval.literal.uintval = strtol(yytext, NULL, 16);
-        yylval.constant = make_unum_const(strtol(yytext, NULL, 16));
-        return UINTCONST;
+"false" {
+        yylval.int_literal = 0;
+        return B_CONSTANT;
+    }
+
+"+="                    { return ADD_ASSIGN; }
+"-="                    { return SUB_ASSIGN; }
+"*="                    { return MUL_ASSIGN; }
+"/="                    { return DIV_ASSIGN; }
+"%="                    { return MOD_ASSIGN; }
+"&&"|"and"              { return AND_OP; }
+"||"|"or"               { return OR_OP; }
+"<="|"le"               { return LE_OP; }
+">="|"ge"               { return GE_OP; }
+"=="|"eq"               { return EQ_OP; }
+"!="|"ne"               { return NE_OP; }
+
+[a-zA-Z_][a-zA-Z_0-9]* {
+        yylval.identifier = dupstr(yytext);
+        return check_type();
+    }
+
+(0[xX])[a-fA-F0-9]+ {
+        yylval.uint_literal = strtol(yytext, NULL, 16);
+        return U_CONSTANT;
+    }
+
+[1-9][0-9]*|0 {
+        yylval.int_literal = strtol(yytext, NULL, 10);
+        return I_CONSTANT;
+    }
+
+[0-9]+([Ee][+-]?[0-9]+) {
+        yylval.float_literal = strtod(yytext, NULL);
+        return F_CONSTANT;
+    }
+
+[0-9]*\.[0-9]+([Ee][+-]?[0-9]+)? {
+        yylval.float_literal = strtod(yytext, NULL);
+        return F_CONSTANT;
     }
 
     /* double quoted strings have escapes managed */
 \"  {
-        bidx = 0;
-        memset(buffer, 0, sizeof(buffer));
+        reset_buffer();
         BEGIN(DQUOTES);
     }
 
 <DQUOTES>\" {
-        //yylval.literal.str = STRDUP(buffer);
-        yylval.constant = make_strg_const(buffer);
+        yylval.str_literal = dupstr(sbuf->buf);
         BEGIN(INITIAL);
-        return STRCONST;
+        return STRING_LITERAL;
     }
 
     /* the short rule matches before the long one does */
-<DQUOTES>\\n    { __append_char('\n'); }
-<DQUOTES>\\r    { __append_char('\r'); }
-<DQUOTES>\\e    { __append_char('\x1b'); }
-<DQUOTES>\\t    { __append_char('\t'); }
-<DQUOTES>\\b    { __append_char('\b'); }
-<DQUOTES>\\f    { __append_char('\f'); }
-<DQUOTES>\\v    { __append_char('\v'); }
-<DQUOTES>\\\\   { __append_char('\\'); }
-<DQUOTES>\\\"   { __append_char('\"'); }
-<DQUOTES>\\\'   { __append_char('\''); }
-<DQUOTES>\\\?   { __append_char('\?'); }
-<DQUOTES>\\.    { __append_char(yytext[1]); }
-<DQUOTES>\\[0-7]{1,3} { __append_char((char)strtol(yytext+1, 0, 8));  }
-<DQUOTES>\\[xX][0-9a-fA-F]{1,3} { __append_char((char)strtol(yytext+2, 0, 16));  }
-<DQUOTES>[^\\\"\n]*  { __append_str(yytext); }
-<DQUOTES>\n     { name_stack->line_no++; yylineno++; } /* track line numbers, but strip new line */
+<DQUOTES>\\n    { add_char('\n'); }
+<DQUOTES>\\r    { add_char('\r'); }
+<DQUOTES>\\e    { add_char('\x1b'); }
+<DQUOTES>\\t    { add_char('\t'); }
+<DQUOTES>\\b    { add_char('\b'); }
+<DQUOTES>\\f    { add_char('\f'); }
+<DQUOTES>\\v    { add_char('\v'); }
+<DQUOTES>\\\\   { add_char('\\'); }
+<DQUOTES>\\\"   { add_char('\"'); }
+<DQUOTES>\\\'   { add_char('\''); }
+<DQUOTES>\\\?   { add_char('\?'); }
+<DQUOTES>\\.    { add_char(yytext[1]); }
+<DQUOTES>\\[0-7]{1,3} { add_char((char)strtol(yytext+1, 0, 8));  }
+<DQUOTES>\\[xX][0-9a-fA-F]{1,3} { add_char((char)strtol(yytext+2, 0, 16));  }
+<DQUOTES>[^\\\"\n]*  { add_str(yytext); }
+<DQUOTES>\n     { line_no++; col_no = 1; } /* track line numbers, but strip new line */
 
 
     /* single quoted strings are absolute literals */
 \'  {
-        bidx = 0;
-        memset(buffer, 0, sizeof(buffer));
+        reset_buffer();
         BEGIN(SQUOTES);
     }
 
 <SQUOTES>\' {
-        //yylval.literal.str = STRDUP(buffer);
-        yylval.constant = make_strg_const(buffer);
+        yylval.str_literal = dupstr(sbuf->buf);
         BEGIN(INITIAL);
-        return STRCONST;
+        return STRING_LITERAL;
     }
 
-<SQUOTES>[^\\'\n]*  { __append_str(yytext); }
-<SQUOTES>\\.    { __append_str(yytext); }
-<SQUOTES>\n     { __append_str(yytext); name_stack->line_no++; yylineno++; } /* don't strip new lines */
+<SQUOTES>[^\\'\n]*  { add_str(yytext); }
+<SQUOTES>\\.    { add_str(yytext); }
+<SQUOTES>\n     { add_str(yytext); line_no++; col_no = 1; } /* don't strip new lines */
 
-.               { warning("unrecognized character: %c (0x%02X)", yytext[0], yytext[0]);}
+";"                 { /* swallow the ';' */ }
+"{"                 { return '{'; }
+"}"                 { return '}'; }
+","                 { return ','; }
+":"                 { return ':'; }
+"="                 { return '='; }
+"("                 { return '('; }
+")"                 { return ')'; }
+"["                 { return '['; }
+"]"                 { return ']'; }
+"."                 { return '.'; }
+"&"                 { return '&'; }
+"!"                 { return '!'; }
+"~"                 { return '~'; }
+"-"                 { return '-'; }
+"+"                 { return '+'; }
+"*"                 { return '*'; }
+"/"                 { return '/'; }
+"%"                 { return '%'; }
+"<"                 { return '<'; }
+">"                 { return '>'; }
 
-<<EOF>> {
-
-        _file_name_stack *name = name_stack->next;
-        FREE(name_stack->name);
-        FREE(name_stack);
-        name_stack = name;
-
-        memset(strbuf, 0, sizeof(strbuf));
-        yypop_buffer_state();
-        if(!YY_CURRENT_BUFFER) {
-            yyterminate();
-        }
-        //import_depth--;
-
-        //return EOF;
-    }
+[ \t\v\f]+          { /* whitespace separates tokens */ }
+\n                  { line_no++; col_no = 1; }
+.                   { /* discard bad characters */ printf("unexpected character: %c: (0x%02X)\n", yytext[0], yytext[0]); }
 
 %%
 
-int open_file(const char *fname) {
-
-    _file_name_stack *name;
-
-    name = CALLOC(1, sizeof(_file_name_stack));
-    name->name = STRDUP(fname);
-    name->next = name_stack;
-    name->line_no = 1;
-    name->col_no = 1;
-    name_stack = name;
-
-    yyin = fopen(fname, "r");
-    if(NULL == yyin) {
-        fatal_error("cannot open the input file: \"%s\": %s", fname, strerror(errno));
-        return 1;
-    }
-
-    yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
-    return 0;
+int yywrap(void)        /* called at end of input */
+{
+    return 1;           /* terminate now */
 }
 
-// Tracking and global interface
-char *get_file_name(void) {
-    if(NULL != name_stack)
-        return name_stack->name;
+static int check_type(void)
+{
+    //switch (sym_type(yytext))
+    //{
+    //case TYPEDEF_NAME:                /* struct name previously seen */
+        //return TYPEDEF_NAME;
+    //default:                          /* includes undefined */
+        //return IDENTIFIER;
+    //}
+    if(strcmp(yytext, "lkjg") == 0 ||
+            strcmp(yytext, "some_name") == 0) // contrived test
+        return TYPEDEF_NAME;
     else
-        return "no name";
+        return IDENTIFIER;
 }
 
-int get_line_number(void) {
-    if(NULL != name_stack)
-        return name_stack->line_no;
-    else
-        return -1;
-}
-
-int get_col_number(void) {
-    if(NULL != name_stack)
-        return name_stack->col_no;
-    else
-        return -1;
-}
-
-const char *get_tok_str(void) {
-    return strbuf;
-}
+int get_line_no() { return line_no; }
+int get_col_no() { return col_no; }
 
 #pragma GCC diagnostic pop
-
-#if 0
-size_t yyread(FILE* file, char* buf, size_t max, Interpreter* interpreter)
-{
-    // Interactive input is signaled by yyin==NULL.
-    if (file == NULL) {
-        if (interpreter->completeLine) {
-            if (interpreter->atStart && interpreter->echo != NULL) {
-                fputs(interpreter->echo, stdout);
-                fputs("\n", stdout);
-                free(interpreter->echo);
-                interpreter->echo = NULL;
-            }
-            fputs(interpreter->atStart ? interpreter->ps1 : interpreter->ps2, stdout);
-            fflush(stdout);
-        }
-
-        char ibuf[max+1]; // fgets needs an extra byte for \0
-        size_t len = 0;
-        if (fgets(ibuf, max+1, stdin)) {
-            len = strlen(ibuf);
-            memcpy(buf, ibuf, len);
-            // Show the prompt next time if we've read a full line.
-            interpreter->completeLine = (ibuf[len-1] == '\n');
-        }
-        else if (ferror(stdin)) {
-            // TODO: propagate error value
-        }
-        return len;
-    }
-    else { // not interactive
-        size_t len = fread(buf, 1, max, file);
-        if (len == 0 && ferror(file)) {
-            // TODO: propagate error value
-        }
-        return len;
-    }
-}
-#endif
