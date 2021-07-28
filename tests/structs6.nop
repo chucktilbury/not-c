@@ -2,7 +2,7 @@
 /*
  * Test struct with function declaration that return a dict type.
  */
-
+namespace x {
 struct test_dict_func {
 
     int dict name36();
@@ -23,3 +23,5 @@ struct test_dict_func {
     string dict name51(int arg1, string arg2, float arg3);
 
 };
+
+}

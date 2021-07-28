@@ -18,6 +18,7 @@ entry {
 
         a = b
         b = c
-        i = i + 1
+        i.a += 1
+
     }
 }

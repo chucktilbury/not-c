@@ -2,11 +2,12 @@
 /*
  * Return a list with the duplicates deleted from the given list.
  */
+namespace name {
 
 int remove_duplicates(int list nums, int arr_size)
 {
     if (arr_size <= 1) {
-        return arr_size
+        return (arr_size)
     }
 
     int i = 0
@@ -23,7 +24,8 @@ int remove_duplicates(int list nums, int arr_size)
         } while(j < arr_size and nums[i] == nums[j])
     }
 
-    return count;
+    return(count)
+}
 }
 
 entry

@@ -2,7 +2,7 @@
 /*
  * Verify that if syntax is accepted.
  */
-
+namespace name {
 nothing do_something() {}
 nothing do_another() {}
 nothing do_a_thing() {}
@@ -20,10 +20,26 @@ int func1() {
     else(var == 1) {
         do_a_thing();
     }
-    else () {
+    else (x) {
         do_the_things();
     }
     else {
-        exit 1;
+        exit(1);
     }
+
+    if(var) {
+        done.the.deed()
+    }
+    else {
+        if(var) {
+            done.the.deed()
+        }
+        else () {
+            x = 1
+        }
+        x = 1
+    }
+
+
+}
 }

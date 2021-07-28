@@ -2,7 +2,7 @@
 /*
  * Verify that the generic switch/case syntax is accepted.
  */
-
+namespace name {
 nothing do_func1() {}
 nothing do_func2() {}
 nothing do_func3() {}
@@ -27,3 +27,4 @@ int test_func() {
         }
     } ; // <--- note the extra no-op
 } ; // <--- note the extra no-op
+}

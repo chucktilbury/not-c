@@ -3,7 +3,7 @@
  * Verify that the uninitialzed variable creation syntax works in a
  * function definition.
  */
-
+namespace name {
 struct test_var_creation {
 
     public nothing var_create();
@@ -32,4 +32,5 @@ nothing var_create() {
     float dict var4;
     string dict var5;
     some_name dict var6;
+}
 }

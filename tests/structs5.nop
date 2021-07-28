@@ -3,6 +3,7 @@
  * Test struct with function declarations that return a list.
  */
 
+namespace x {
 struct test_list_func {
 
     int list name20();
@@ -23,3 +24,5 @@ struct test_list_func {
     string list name35(int arg1, string arg2, float arg3);
 
 };
+
+}

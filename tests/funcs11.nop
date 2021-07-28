@@ -3,7 +3,7 @@
  * Verify that the generic switch/case syntax without default clause
  * is accepted.
  */
-
+namespace name {
 nothing do_func1() {}
 nothing do_func2() {}
 nothing do_func3() {}
@@ -24,4 +24,4 @@ int test_func() {
             do_func3();
         }
     }
-}
+}}

@@ -2,7 +2,7 @@
 /*
  * Find the greatest common denominator between 2 integers.
  */
-
+namespace name {
 int do_gcd(int n1, int n2) {
 
     system.print("Greatest common denomonator of: ", n1, n2)
@@ -17,7 +17,8 @@ int do_gcd(int n1, int n2) {
         }
     }
 
-    return n1;
+    return n1
+}
 }
 
 entry {

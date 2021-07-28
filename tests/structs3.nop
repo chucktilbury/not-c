@@ -2,7 +2,7 @@
 /*
  * Test function declarations with one parameter.
  */
-
+namespace x {
 struct name1 {
 
     int name16(int arg1);
@@ -11,3 +11,5 @@ struct name1 {
     string name19(int arg1);
 
 };
+
+}

@@ -1,1 +1,6 @@
-This directory contains files that the grammer accepts. In general, these files are correct syntatically, but nonesense symantically. Some of them were created to address specific problems and others are ported from C to "increase coverage". As the project progresses, these files will become more coherent, but for now that is not a requirement.
+
+# Syntax tests.
+
+This directory holds syntax checks for the parser. They are not intended to be
+working code in general, but as test input to test different parts of the
+grammer.

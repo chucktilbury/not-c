@@ -1,7 +1,7 @@
 /*
  * Test simple function declarations
  */
-
+namespace x {
 struct name1 {
 
     int name12();
@@ -10,3 +10,5 @@ struct name1 {
     string dict name15();
 
 };
+
+}

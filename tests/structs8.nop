@@ -2,7 +2,7 @@
 /*
  * Verify that public and private keywords are recognized.
  */
-
+namespace x {
 struct test_pp_rec {
 
     public int var1;
@@ -14,3 +14,5 @@ struct test_pp_rec {
     public int list func3();
 
 };
+
+}

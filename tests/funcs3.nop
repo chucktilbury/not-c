@@ -2,7 +2,7 @@
 /*
  * Verify that simple assignments are accepted in a function.
  */
-
+namespace name {
 struct test_var_assign {
 
     int var;
@@ -33,4 +33,5 @@ nothing var_assign() {
     float dict var4 = var3;
     string dict var5 = var4;
     some_name dict var6 = var5;
+}
 }

@@ -3,7 +3,7 @@
  *
  * Structs can have variable declarations and function declarations.
  */
-
+namespace x {
 // empty structs are not recognized.
 // initialization in a struct is not recognized.
 struct name {
@@ -30,10 +30,9 @@ struct name {
 struct name53 {
 
     int name54;
-    init();     // init accepts normal function args
-    deinit();   // deinit does not accept any args
-    deinit;     // also correct
-    init(int arg1);
+    ctor();     // init accepts normal function args
+    dtor;   // deinit does not accept any args
+    ctor(int arg1);
 
     // check that compound symbols are accepted for a type name
     name55 name56;
@@ -46,4 +45,4 @@ struct name53 {
 
     nothing name67();
 
-};
+}}

@@ -2,7 +2,7 @@
 /*
  * Verify that the syntax for a formatted string is accepted.
  */
-
+namespace name {
 int func() {
 
     // note that a format initialzer cannot be blank as it can be with funciton
@@ -14,4 +14,5 @@ int func() {
     //string dict var1 = [nam1="{0}"(), nam2="string"];
     // syntax error ----------------^^
 
+}
 }
