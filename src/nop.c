@@ -10,8 +10,9 @@
 
 #include "parser.h"
 #include "scanner.h"
+#include "errors.h"
 
-extern FILE* yyin;
+extern FILE* yyin; // defined in scanner.c, generated file
 int verbosity = 0;
 
 int main(int argc, char** argv) {

@@ -40,6 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "parser.h"
+#include "memory.h"
 
 extern void yyerror(const char *);  /* prints grammar violation message */
 
@@ -83,18 +84,10 @@ void init_scanner(const char* fname) {
         exit(1);
     }
 
-    sbuf = malloc(sizeof(_str_buffer));
-    if(sbuf == NULL) {
-        fprintf(stderr, "out of memory!\n");
-        exit(1);
-    }
+    sbuf = ALLOC_DS(_str_buffer);
     sbuf->cap = 0x01 << 3;
     sbuf->len = 0;
-    sbuf->buf = malloc(sbuf->cap);
-    if(sbuf->buf == NULL) {
-        fprintf(stderr, "out of memory!\n");
-        exit(1);
-    }
+    sbuf->buf = ALLOC_LST(sbuf->cap, char);
 }
 
 void destroy_scanner() {
@@ -102,8 +95,8 @@ void destroy_scanner() {
     fclose(yyin);
     if(sbuf != NULL) {
         if(sbuf->buf != NULL)
-            free(sbuf->buf);
-        free(sbuf);
+            FREE(sbuf->buf);
+        FREE(sbuf);
     }
 }
 
@@ -112,11 +105,7 @@ static void resize_str_buffer() {
     if(sbuf != NULL) {
         if(sbuf->len+2 >= sbuf->cap) {
             sbuf->cap <<= 1;
-            sbuf->buf = realloc(sbuf->buf, sbuf->cap);
-            if(sbuf->buf == NULL) {
-                fprintf(stderr, "out of memory!\n");
-                exit(1);
-            }
+            sbuf->buf = REALLOC_LST(sbuf->buf, sbuf->cap, char);
         }
     }
 }
@@ -140,14 +129,6 @@ static void add_str(const char* str) {
         add_char(str[i]);
 }
 
-static const char* dupstr(const char* str) {
-
-    size_t len = strlen(str) + 1;
-    const char* s = malloc(len);
-    memcpy((void*)s, str, len);
-    return s;
-}
-
 %}
 
 %x COMMENT
@@ -167,27 +148,27 @@ static const char* dupstr(const char* str) {
     }
 
 "float" {
-        yylval.type_name = dupstr(yytext);
+        yylval.type_name = DUPSTR(yytext);
         return(FLOAT);
     }
 "int" {
-        yylval.type_name = dupstr(yytext);
+        yylval.type_name = DUPSTR(yytext);
         return(INT);
     }
 "uint" {
-        yylval.type_name = dupstr(yytext);
+        yylval.type_name = DUPSTR(yytext);
         return(UINT);
     }
 "nothing" {
-        yylval.type_name = dupstr(yytext);
+        yylval.type_name = DUPSTR(yytext);
         return(NOTHING);
     }
 "bool" {
-        yylval.type_name = dupstr(yytext);
+        yylval.type_name = DUPSTR(yytext);
         return BOOL;
     }
 "string" {
-        yylval.type_name = dupstr(yytext);
+        yylval.type_name = DUPSTR(yytext);
         return STRING;
     }
 
@@ -237,7 +218,7 @@ static const char* dupstr(const char* str) {
 "!="|"ne"               { return NE_OP; }
 
 [a-zA-Z_][a-zA-Z_0-9]* {
-        yylval.identifier = dupstr(yytext);
+        yylval.identifier = DUPSTR(yytext);
         return check_type();
     }
 
@@ -268,7 +249,7 @@ static const char* dupstr(const char* str) {
     }
 
 <DQUOTES>\" {
-        yylval.str_literal = dupstr(sbuf->buf);
+        yylval.str_literal = DUPSTR(sbuf->buf);
         BEGIN(INITIAL);
         return STRING_LITERAL;
     }
@@ -299,7 +280,7 @@ static const char* dupstr(const char* str) {
     }
 
 <SQUOTES>\' {
-        yylval.str_literal = dupstr(sbuf->buf);
+        yylval.str_literal = DUPSTR(sbuf->buf);
         BEGIN(INITIAL);
         return STRING_LITERAL;
     }

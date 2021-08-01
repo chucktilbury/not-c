@@ -1,0 +1,85 @@
+
+namespace constants {
+
+    public const int CT_BOOL = 1
+    public const int CT_INUM = 2
+    public const int CT_UNUM = 3
+    public const int CT_FNUM = 4
+    public const int CT_STRG = 5
+
+    private struct constant {
+        int type
+        private struct value {
+            bool bval
+            string sval
+            uint uval
+            int ival
+            float fval
+        }
+
+        // function parameters can be overloaded
+        ctor(int ival)
+        ctor(uint uval)
+        ctor(float fval)
+        ctor(string sval)
+        ctor(bool bval)
+
+        // function return values cannot be overloaded
+        public int get_type()
+        public bool get_bool()
+        public string get_strg()
+        public int get_intval()
+        public uint get_uintval()
+        public float get_float()
+    }
+
+    constant.ctor(int ival) {
+        type = CT_INUM
+        value.ival = ival
+    }
+
+    constant.ctor(uint uval) {
+        type = CT_UNUM
+        value.uval = uval
+    }
+
+    constant.ctor(float fval) {
+        type = CT_FNUM
+        value.fval = fval
+    }
+
+    constant.ctor(string sval) {
+        type = CT_STRG
+        value.sval = ival
+    }
+
+    constant.ctor(bool bval) {
+        type = CT_BOOL
+        value.bval = bval
+    }
+
+    int constant.get_type() {
+        return type
+    }
+
+    bool constant.get_bool() {
+        return value.bval
+    }
+
+    string constant.get_strg() {
+        return value.sval
+    }
+
+    int constant.get_intval() {
+        return value.ival
+    }
+
+    uint constant.get_uintval() {
+        return value.uval
+    }
+
+    float constant.get_float() {
+        return value.fval
+    }
+
+}

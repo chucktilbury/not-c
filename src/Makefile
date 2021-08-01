@@ -1,5 +1,9 @@
 TARGET	=	nop
-SRCS	=	main.c
+SRCS	=	nop.c \
+			memory.c \
+			errors.c \
+			symbols.c \
+			object.c
 SRCS1	=	parser.c \
 			scanner.c
 OBJS	=	$(SRCS:.c=.o)

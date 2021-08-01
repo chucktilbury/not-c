@@ -69,11 +69,12 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "scanner.h"
+#include "symbols.h"
 
 #ifdef PARSE_TRACE
 #define OSTR stderr
-extern int verbosity;
-extern int line_no, col_no;
+extern int verbosity; // defined in nop.c
+extern int line_no, col_no; // defined in scanner.c, generated file
 #define PTRACE(v,fmt,...) do{ \
     if(verbosity >= (v)) { \
     fprintf(OSTR, ">>>>>>>>>> PTRACE: %d: %d: %d: ", __LINE__, line_no, col_no); \
@@ -146,7 +147,7 @@ namespace
     ;
 
 namespace_item
-    : public_or_private struct_declaration
+    : struct_declaration
     | public_or_private method_definition
     | public_or_private variable_definition
     ;
@@ -181,6 +182,7 @@ identifier
 compound_identifier
     : IDENTIFIER
     | compound_identifier '.' IDENTIFIER
+    | error
     ;
 
 compound_name
@@ -238,6 +240,7 @@ expression
     | NOT expression
     | type_specifier '(' expression ')'
     | '(' expression ')'
+    | error
     ;
 
 assignment_expression
@@ -260,7 +263,7 @@ public_or_private
     ;
 
 struct_declaration
-    : STRUCT IDENTIFIER '{' struct_list '}'
+    : public_or_private STRUCT IDENTIFIER '{' struct_list '}'
     ;
 
 struct_item
@@ -269,6 +272,8 @@ struct_item
     | CTOR '(' method_declaration_parameters ')'
     | CTOR '(' ')'
     | DTOR
+    | struct_declaration
+    | error
     ;
 
 struct_list
@@ -296,6 +301,7 @@ method_definition
     | compound_identifier '.' CTOR '(' method_declaration_parameters ')' method_body
     | compound_identifier '.' CTOR '(' ')' method_body
     | compound_identifier '.' DTOR method_body
+    | error
     ;
 
 method_body
@@ -317,6 +323,7 @@ method_body_item
     | CONTINUE
     | RETURN expression
     | method_body
+    | error
     ;
 
 method_body_list
